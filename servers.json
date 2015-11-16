@@ -1,0 +1,70 @@
+{
+    "java_info" : {
+        "java_version" : 8,
+
+        "java32_folder" : "Java/x32",
+        "java64_folder" : "Java/x64",
+
+        "jvm32_library_path" : "bin/client/jvm.dll",
+        "jvm64_library_path" : "bin/server/jvm.dll",
+
+        "jvm32_arguments" : "-Xmn384m",
+        "jvm64_arguments" : "-Xmn384m",
+        
+        "checked_folders" : [
+            {
+                "path" : "lib",
+                "mask" : "*.jar",
+                "recursive" : "true"
+            },
+            {
+                "path" : "bin",
+                "mask" : "*.dll",
+                "recursive" : "true"
+            }
+        ]
+    },
+    
+    "servers" : [
+        {
+            "name" : "Sky Server",
+            "info" : "1.8.8 + OptiFine + GLSL Shaders",
+
+            "ip"   : "95.79.30.167",
+            "port" : "25565",
+
+            "client_folder" : "Clients/Sandbox",
+            "natives_path"  : "versions/$client_version/natives",	
+            "assets_path"   : "assets",
+            
+            "asset_index" : "1.8",
+            "version"     : "Sandbox",
+            
+            "main_class" : "net.minecraft.launchwrapper.Launch",
+            "arguments"  : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass optifine.OptiFineTweaker",
+            
+            "jars" : [
+                {"name" : "libraries/*.jar"},
+                {"name" : "versions/Sandbox/OptiFine1.8.8.jar"}
+            ],
+			
+            "checked_folders" : [
+                {
+                    "path" : "libraries",
+                    "mask" : "*.jar",
+                    "recursive"  : "true",
+                    "exclusives" : [
+                        {"path" : "authlib-1.5.17.jar"}
+                    ]
+                },
+                {
+                    "path" : "versions",
+                    "mask" : "*.jar",
+                    "recursive" : "true"
+                }
+            ],
+			
+			"!preview" : "Previews/Sky.png"
+        }
+    ]
+}
