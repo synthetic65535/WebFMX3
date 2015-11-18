@@ -1,4 +1,7 @@
 <?php
+    
+    // !!! Раскомментировать, если используется WordPress:
+    //include_once('WordPressPasswordHash.php'); // Оригинальное название "class-phpass.php"
 
     class dbConnector {
         private $_dbHandle = null;
@@ -93,17 +96,20 @@
         const STATUS_DB_OBJECT_NOT_PRESENT = -1;
         const STATUS_DB_ERROR              = -2;
         
-		// Варианты CMS:
-        const CMS_CUSTOM    = 0;
-		const CMS_DLE       = 1;
-		const CMS_WEBMCR    = 2;
-		const CMS_WORDPRESS = 3;
-		const CMS_PUNBB     = 4;
-		const CMS_AUTHME    = 5;
-		const CMS_VBULLETIN = 6;
-		const CMS_IPB       = 7;
-		const CMS_XENFORO   = 8;
+        // Варианты CMS:
+        const CMS_CUSTOM    = 'Custom.php';
+        const CMS_DLE       = 'DLE.php';
+        const CMS_WEBMCR    = 'WebMCR.php';
+        const CMS_WORDPRESS = 'WordPress.php';
+        const CMS_PUNBB     = 'PunBB.php';
+        const CMS_AUTHME    = 'AuthMe.php';
+        const CMS_VBULLETIN = 'vBulletin.php';
+        const CMS_IPB3      = 'IPBoard3.php';
+        const CMS_IPB4      = 'IPBoard4.php';
+        const CMS_XENFORO   = 'XenForo.php';
 		
+        const CMS_TYPE = DatabaseWorker::CMS_CUSTOM; // <-- Здесь менять используемую CMS!
+        
         private $_dbConnector = null;
         
         public function SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword) {
@@ -121,6 +127,17 @@
         public function GetLastDatabaseError() {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             return $this->_dbConnector->GetLastDatabaseError();
+        }
+
+        public function IsPlayerInBase($playersTableName, $login, $password) {
+            if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
+            include('CMS/'.$this::CMS_TYPE);
+            return $authStatus;
+        }
+        
+        
+        public function GetValidCaseLogin($playersTableName, $playersColumnName, $login) {
+            
         }
         
         public function InsertPlayerInBase($playersTableName, $login, $password) {
@@ -142,24 +159,6 @@
             return $regStatus;
         }
         
-        public function IsPlayerInBase($playersTableName, $login, $password) {
-            if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
-            
-            $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `login`=:login AND BINARY `password`=:password";
-            $arguments = array (
-                'login'    => $login,
-                'password' => $password
-            );
-            
-            $preparedRequest = null;
-            $status = $this->_dbConnector->ExecutePreparedRequest($request, $arguments, $preparedRequest);
-            if (!isset($preparedRequest) || !$status) {
-                return $this::STATUS_DB_ERROR;
-            }
-            $authStatus = $preparedRequest->fetchColumn() ? $this::STATUS_USER_EXISTS : $this::STATUS_USER_NOT_EXISTS;
-            $this->_dbConnector->ClosePreparedRequest($preparedRequest);
-            return $authStatus;
-        }
         
         public function InsertPlayerToAuthorizedPlayersList($tokensTableName, $login, $uuid, $accessToken, $serverId) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
