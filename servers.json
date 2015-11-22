@@ -8,8 +8,8 @@
         "jvm32_library_path" : "bin/client/jvm.dll",
         "jvm64_library_path" : "bin/server/jvm.dll",
 
-        "jvm32_arguments" : "-Xmn384m",
-        "jvm64_arguments" : "-Xmn384m",
+        "jvm32_arguments" : "-Xmn128M -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
+        "jvm64_arguments" : "-Xmn128M -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
         
         "checked_folders" : [
             {

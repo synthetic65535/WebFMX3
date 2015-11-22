@@ -75,22 +75,28 @@
     $authStatus = $dbWorker->IsPlayerInBase($playersTableName, $login, $password);
     switch ($authStatus) {
         // Проверяем возможные ошибки:
-        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector');    
+        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector');
         case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError());
         case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!');
     } 
+
+    // Получаем ник в верном регистре:
+    $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $login);
+    if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($login === null)) {
+        SendErrorMessage('Не получилось извлечь логин в верном регистре!');
+    }
+
     $dbWorker->CloseDatabase();
-    
-    $lowerLogin = strtolower($login);
+
     switch ($imageType) {
         case 'skin':
             $workingFolder = $skinsFolder;
-            $objectName = $lowerLogin.'.png';
+            $objectName    = $login.'.png';
             $defObjectName = $defSkinName;
             break;
         case 'cloak':
             $workingFolder = $cloaksFolder;
-            $objectName = $lowerLogin.$cloaksPostfix.'.png';
+            $objectName    = $login.$cloaksPostfix.'.png';
             $defObjectName = $defCloakName;
             break;
         default: SendErrorMessage('Неизвестный тип рабочего объекта!');
@@ -107,14 +113,14 @@
             // Проверяем, действительно ли загрузили PNG:
             $imageInfo = getimagesize($uploadedFile['tmp_name']);
             if ($imageInfo === null) {SendErrorMessage('Информация об изображении не получена!');}
-            if ($imageInfo[IMAGE_TYPE] != IMAGETYPE_PNG) {SendErrorMessage('Полученный файл - не PNG!');}
+            if ($imageInfo[IMAGE_TYPE] !== IMAGETYPE_PNG) {SendErrorMessage('Полученный файл - не PNG!');}
             
             // Проверяем соотношения сторон и габариты:
             $width  = $imageInfo[WIDTH];
             $height = $imageInfo[HEIGHT];
             
             $aspectRatio = $width / $height;
-            if ($aspectRatio != VALID_ASPECT_RATIO) {SendErrorMessage('Неверное соотношение сторон изображения!');}
+            if ($aspectRatio !== VALID_ASPECT_RATIO) {SendErrorMessage('Неверное соотношение сторон изображения!');}
             
             if (($width > MAX_WIDTH) || ($height > MAX_HEIGHT)) {SendErrorMessage('Превышен максимальный размер изображения! Максимальный размер '.MAX_WIDTH.'x'.MAX_HEIGHT);}
             

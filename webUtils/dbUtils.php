@@ -84,7 +84,7 @@
         const STATUS_JOIN_SERVER_SUCCESS        = 1;
         const STATUS_JOIN_SERVER_USER_NOT_FOUND = 0;
         
-        // Результат GetUsernameByUUID:
+        // Результат GetUsernameByUUID и GetValidCasedLogin:
         const STATUS_QUERY_SUCCESS        = 1;
         const STATUS_QUERY_USER_NOT_FOUND = 0;
         
@@ -131,13 +131,30 @@
 
         public function IsPlayerInBase($playersTableName, $login, $password) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
+            $authStatus = false;
             include('CMS/'.$this::CMS_TYPE);
             return $authStatus;
         }
         
         
-        public function GetValidCaseLogin($playersTableName, $playersColumnName, $login) {
+        public function GetValidCasedLogin($playersTableName, $playersColumnName, &$login) {
+            if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
+            $request = "SELECT {$playersColumnName} FROM `{$playersTableName}` WHERE `{$playersColumnName}`=:login";
+            $arguments = array (
+                'login' => $login
+            );
+            
+            $preparedRequest = null;
+            $result = $this->_dbConnector->ExecutePreparedRequest($request, $arguments, $preparedRequest);
+            if (!isset($preparedRequest) || !$result) {
+                return $this::STATUS_DB_ERROR;
+            }    
+            
+            $login = $preparedRequest->fetch(PDO::FETCH_ASSOC)[$playersColumnName];   
+            $this->_dbConnector->ClosePreparedRequest($preparedRequest);
+            
+            return $login !== null ? $this::STATUS_QUERY_SUCCESS : $this::STATUS_QUERY_USER_NOT_FOUND;  
         }
         
         public function InsertPlayerInBase($playersTableName, $login, $password) {

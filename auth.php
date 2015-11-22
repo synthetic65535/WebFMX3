@@ -5,7 +5,7 @@
     include('webUtils/dbUtils.php');
     include('webUtils/auxUtils.php');
     include('settings.php');
-    
+
     // Отправить сообщение об ошибке и завершить скрипт:
     function SendErrorMessage($reason, $encryptionKey = '') {
         $errorMessage = array (
@@ -48,6 +48,12 @@
         case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError(), $encryptionKey);
         case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!', $encryptionKey);
     } 
+   
+    // Получаем ник в верном регистре:
+    $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $login);
+    if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($login === null)) {
+        SendErrorMessage('Не получилось извлечь логин в верном регистре!', $encryptionKey);
+    }
     
     // Проверяем бан по HWID:
     if ($hwid !== null) {
@@ -73,7 +79,7 @@
     }
     
     $dbWorker->CloseDatabase();
-    
+
 // Возвращаем информацию о пользователе, клиентах, джаве и лаунчере:
     
     // Формируем информацию о лаунчере:
@@ -91,22 +97,20 @@
         'server_id'    => $serverId
     );
     
-    $lowerLogin = strtolower($login); // Приводим логин к нижнему регистру
-    
     // Добавляем ссылку на скин, если есть:
-    if (file_exists($relativeSkinPath = $skinsFolder.'/'.$lowerLogin.'.png')) {
+    if (file_exists($relativeSkinPath = $skinsFolder.'/'.$login.'.png')) {
         $userInfo['skin'] = $workingFolder.'/'.$relativeSkinPath;
     } elseif (file_exists($relativeDefaultSkinPath = $skinsFolder.'/'.$defSkinName)) {
         $userInfo['skin'] = $workingFolder.'/'.$relativeDefaultSkinPath;
     }
     
     // Аналогично - для плаща:
-    if (file_exists($relativeCloakPath = $cloaksFolder.'/'.$lowerLogin.$cloaksPostfix.'.png')) {
+    if (file_exists($relativeCloakPath = $cloaksFolder.'/'.$login.$cloaksPostfix.'.png')) {
         $userInfo['cloak'] = $workingFolder.'/'.$relativeCloakPath;
     } elseif (file_exists($relativeDefaultCloakPath = $cloaksFolder.'/'.$defCloakName)) {
         $userInfo['cloak'] = $workingFolder.'/'.$relativeDefaultCloakPath;
     }
-    
+
     // Общая структура ответа:
     $response = array (
         'status'        => 'success',
@@ -124,7 +128,7 @@
         SendErrorMessage('Некорректный формат JSON-файла настроек клиентов!', $encryptionKey);
     }
     $response['servers_info'] = $clientsSettings;
-    
+
     $responseJson = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     EncryptDecryptVerrnam($responseJson, strlen($responseJson), $encryptionKey, strlen($encryptionKey));
     echo $responseJson;

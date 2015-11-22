@@ -1,5 +1,4 @@
 <?php
-    
     // Настройки базы данных:
     $dbHost     = 'localhost';
     $dbName     = 'h7936_db';
@@ -10,7 +9,10 @@
     $playersTableName = 'players';
     $tokensTableName  = 'tokens';
     $hwidsTableName   = 'hwids';
-    
+
+    // Имя колонки с логинами игроков в таблице $playersTableName:
+    $playersColumnName = 'login'; 
+
     // Настройка файловой иерархии:
     $workingFolder  = 'http://froggystyle.ru/WebFMX3';
     $skinsFolder    = 'Skins';
@@ -27,11 +29,10 @@
     $defCloakName  = 'Default_cloak.png'; // Название стандартного плаща в папке $cloaksFolder
     
     // Настройки лаунчера:
-    $launcherMinVersion = 0;
+    $launcherMinVersion = 2;
     $launcherLink32 = 'http://froggystyle.ru/WebFMX3/Launcher32.exe';
     $launcherLink64 = 'http://froggystyle.ru/WebFMX3/Launcher64.exe';
     
     // Ключ шифрования (должен совпадать с ключом в лаунчере):
     $encryptionKey = 'FMXL3';
-
 ?>
