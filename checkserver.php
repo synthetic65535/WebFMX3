@@ -41,6 +41,12 @@
         SendErrorMessage('Не удалось подключиться к БД: '.$dbWorker->GetLastDatabaseError());
     }    
     
+    // Получаем ник в верном регистре:
+    $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $username);
+    if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($username === null)) {
+        SendErrorMessage('Valid case login extraction fault!', 'Unable to extract valid-cased username!');
+    }
+    
     $checkServerStatus = $dbWorker->DoCheckServer($tokensTableName, $username, $serverId);
     $dbWorker->CloseDatabase();
     

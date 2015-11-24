@@ -48,9 +48,8 @@
 
         $timestamp = time() * 1000;
         
-        $lowerLogin = strtolower($username);
-        $skinRelativePath = $skinsFolder.'/'.$lowerLogin.'.png';
-        $cloakRelativePath = $cloaksFolder.'/'.$lowerLogin.$cloaksPostfix.'.png';
+        $skinRelativePath = $skinsFolder.'/'.$username.'.png';
+        $cloakRelativePath = $cloaksFolder.'/'.$username.$cloaksPostfix.'.png';
         
         $skinUrl  = $workingFolder.'/'.$skinRelativePath;
         $cloakUrl = $workingFolder.'/'.$cloakRelativePath;

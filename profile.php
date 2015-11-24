@@ -40,7 +40,7 @@
     function SendErrorMessage($error, $errorMessage) {
         exit('{"error":"'.$error.'","errorMessage":"'.$errorMessage.'"}');
     }
-    
+
     function SendSuccessfulMessage($uuid, $name, $profileInfo) {
         if ($profileInfo !== null) {
             exit('{"id":"'.$uuid.'","name":"'.$name.'","properties":[{"name":"textures","value":"'.$profileInfo.'"}]}');
@@ -50,7 +50,7 @@
     }    
 
     $uuid = filter_input(INPUT_GET, 'uuid', FILTER_SANITIZE_STRING);
-    
+
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
     if ($dbWorker === null) {
@@ -61,11 +61,17 @@
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
         SendErrorMessage('dbWorker error!', 'Unable to connect to database!');
     }
-    
+
     // Получаем имя игрока по его UUID:
     $username = null;
     $queryStatus = $dbWorker->GetUsernameByUUID($tokensTableName, $uuid, $username);
-    
+
+    // Получаем ник в верном регистре:
+    $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $username);
+    if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($username === null)) {
+        SendErrorMessage('Valid case login extraction fault!', 'Unable to extract valid-cased username!');
+    }
+
     switch($queryStatus) {
         case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Database Error', 'Unknown database error');
         case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Database error', 'DB object not present');

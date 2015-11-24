@@ -151,5 +151,4 @@
             SendErrorMessage('Неизвестное действие!');
             break;
     }
-    
 ?>
