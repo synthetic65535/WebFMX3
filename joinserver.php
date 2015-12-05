@@ -27,7 +27,7 @@
     }
 
     // Получаем данные:
-    $accessToken = filter_input(INPUT_GET, 'session' , FILTER_SANITIZE_STRING);
+    $accessToken = filter_input(INPUT_GET, 'sessionId' , FILTER_SANITIZE_STRING);
     $username    = filter_input(INPUT_GET, 'user'    , FILTER_SANITIZE_STRING);
     $serverId    = filter_input(INPUT_GET, 'serverId', FILTER_SANITIZE_STRING);   
     
