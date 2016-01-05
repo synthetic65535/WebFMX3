@@ -1,7 +1,7 @@
 <?php
 /*
     При подключении к серверу клиент посылает этому скрипту GET'ом 3 поля::
-      "session"  : "[]",
+      "sessionId"  : "[]",
       "user"     : "Ник игрока",
       "serverId" : "-5dd86675917cd161b0d011aec899f236b3878c42"
 
@@ -41,6 +41,12 @@
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
         SendErrorMessage('Не удалось подключиться к БД: '.$dbWorker->GetLastDatabaseError());
     }    
+    
+    // Получаем ник в верном регистре:
+    $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $username);
+    if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($username === null)) {
+        SendErrorMessage('Valid case login extraction fault!', 'Unable to extract valid-cased username!');
+    }
     
     $checkServerStatus = $dbWorker->DoJoinServer($tokensTableName, $accessToken, $username, $serverId);
     $dbWorker->CloseDatabase();
