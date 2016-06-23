@@ -18,8 +18,18 @@
                 "recursive" : "true"
             },
             {
+                "path" : "lib",
+                "mask" : "*.exe",
+                "recursive" : "true"
+            },
+            {
                 "path" : "bin",
                 "mask" : "*.dll",
+                "recursive" : "true"
+            },
+            {
+                "path" : "bin",
+                "mask" : "*.exe",
                 "recursive" : "true"
             }
         ]
@@ -34,7 +44,7 @@
             "port" : "25565",
 
             "client_folder" : "Clients/Sandbox",
-            "natives_path"  : "versions/$client_version/natives",	
+            "natives_path"  : "versions/$client_version/natives",
             "assets_path"   : "assets",
             
             "asset_index" : "1.8",
@@ -50,6 +60,16 @@
 			
             "checked_folders" : [
                 {
+                    "path" : "assets/objects",
+                    "mask" : "*",
+                    "recursive"  : "true"
+                },
+                {
+                    "path" : "assets/indexes",
+                    "mask" : "*.jar",
+                    "recursive" : "true"
+                },
+                {
                     "path" : "libraries",
                     "mask" : "*.jar",
                     "recursive"  : "true",
@@ -58,8 +78,13 @@
                     ]
                 },
                 {
+                    "path" : "mods",
+                    "mask" : "*",
+                    "recursive" : "true"
+                },
+                {
                     "path" : "versions",
-                    "mask" : "*.jar",
+                    "mask" : "*",
                     "recursive" : "true"
                 }
             ],

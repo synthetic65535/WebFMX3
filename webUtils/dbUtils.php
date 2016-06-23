@@ -91,10 +91,12 @@
         // Результат IsHwidBanned:
         const STATUS_USER_BANNED     = 1;
         const STATUS_USER_NOT_BANNED = 0;
+		const STATUS_NO_HWID    	 = 2;
         
         // Ошибки подключения к БД:
         const STATUS_DB_OBJECT_NOT_PRESENT = -1;
         const STATUS_DB_ERROR              = -2;
+        
         
         // Варианты CMS:
         const CMS_CUSTOM    = 'Custom.php';
@@ -107,8 +109,9 @@
         const CMS_IPB3      = 'IPBoard3.php';
         const CMS_IPB4      = 'IPBoard4.php';
         const CMS_XENFORO   = 'XenForo.php';
+        const CMS_MCRSHOP   = 'CMSMinecraftShop.php';
 		
-        const CMS_TYPE = DatabaseWorker::CMS_CUSTOM; // <-- Здесь менять используемую CMS!
+        const CMS_TYPE = DatabaseWorker::CMS_PUNBB; // <-- Здесь менять используемую CMS!
         
         private $_dbConnector = null;
         
@@ -370,15 +373,94 @@
             return $checkServerStatus;
         }
         
-        
-        
-        public function IsHwidBanned($hwidsTableName, $hwid) {
+		
+		//является ли id-шник флешкой
+		function IsItFlashDrive($hwid) {
+			return 
+				(strpos($hwid, 'AA0000000000') === 0) || // https://www.google.ru/search?q=AA00000000000485&es_sm=93 https://www.google.ru/search?q=AA00000000000489&es_sm=93
+				(strpos($hwid, '058F') === 0) || // 058F63666433 058F312D81B 058F312D81B 058F63666485 058F63666485 058F312D81B 058F63666485 058F63626370 058F63626371 058F63626372 058F63626373 058F0O1111B1 058F63666485 058F0O1111B1 058F0O1111B1
+				($hwid === '801130168383') || // https://www.google.ru/webhp#q=801130168383
+				($hwid === '20090516388200000') || // https://www.google.ru/webhp#q=20090516388200000
+				($hwid === '130818V01') || // https://www.google.ru/webhp#q=130818V01
+				(preg_match('/^0*([0-9]?|123)$/', $hwid)) // 00000000000006, 0000000000000001, 00000000000123
+				;
+		}
+		
+		//плохой ID-шник, появляется одинаковый у реально разных пользователей
+		function IsItBadHwid($hwid) {
+			return 
+				($hwid === '1171') ||
+				($hwid === '1172') ||
+				($hwid === '0123456789ABCDE0') ||
+				($hwid === '0123456789ABCDE1') /*||
+				($hwid === 'COM0D4C83C4ADBC9F8FA99D64B3DE4F07A4') ||
+				($hwid === 'COM6D457289408B1963DAAE52B23DC0475E') ||
+				($hwid === 'COMA0D933C7EDF012962B1CE7A885A0DE2E') ||
+				($hwid === 'COM6EF9DC430B89E974DC53EC7E78EB9A68') ||
+				($hwid === 'COMFB506B92F7651439110445EC9AECFA48') ||
+				($hwid === 'COM3E11465C6F6A2DBE4707B044A58958B4')*/
+				;
+		}
+		
+		//функция для разворачивания hwid в массив
+		function ExplodeHwid($hwid) {
+			
+			//отрезаем излишне длинные hwid
+			$hwid = substr($hwid, 0, 1024);
+			
+			//все символы переводим в верхний регистр для определённости
+			$hwid = strtoupper($hwid);
+			
+			//избавляемся от инородных символов
+			$whitelist = '/[^a-zA-Z0-9:]/';
+			$hwid = preg_replace($whitelist, '', $hwid);
+			
+			//предварительно разделяем строку
+			$pre_result = explode(':', $hwid );
+			
+			$result = array();
+			//в результат попадают только строки длиннее 1 символа не содержащие UNKNOWN
+			foreach ($pre_result as $item)
+				if ( (strlen($item) > 1) && (strpos($item, 'UNKNOWN') === false) &&
+				!($this->IsItFlashDrive($item)) && !($this->IsItBadHwid($item)) )
+					$result[] = $item;
+			
+			return $result;
+		}
+		
+		
+		//теперь функция проверяет на бан отдельно каждый hwid из строки
+		public function IsHwidStrBanned($hwidsTableName, $hwidstr) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
-            $request = "SELECT COUNT(1) FROM `{$hwidsTableName}` WHERE `hwid`=:hwid AND `banned`=true";
-            $arguments = array (
-                'hwid' => $hwid
-            );
+            $hwids = $this->ExplodeHwid($hwidstr);
+            
+			$hwid_conditions = '';
+			$arguments = array ();
+			$hwids_count = count($hwids);
+			$i = 0;
+			
+			//Если нет ни одного нормального hwid то выдаём ошибку
+			
+			if ($hwids_count == 0)
+				return $this::STATUS_NO_HWID;
+			
+			foreach ($hwids as $item)
+			{
+				$i++;
+				
+				if ($i == $hwids_count)
+					$hwid_conditions .= '`hwid`=:hwid'.$i;
+				else
+					$hwid_conditions .= '`hwid`=:hwid'.$i.' OR ';
+				
+				$arguments += array (
+                'hwid'.$i => $item
+            	);
+            	
+			}
+			
+			$request = "SELECT COUNT(1) FROM `{$hwidsTableName}` WHERE ($hwid_conditions) AND `banned`=true";
             
             $preparedRequest = null;
             $status = $this->_dbConnector->ExecutePreparedRequest($request, $arguments, $preparedRequest);
@@ -390,14 +472,17 @@
             return $bannedStatus;
         }
         
-        public function AddHwidInBase($hwidsTableName, $login, $hwid) {
+		
+		//теперь функция добавляет только один hwid в базу
+		function AddOneHwidInBase($hwidsTableName, $login, $hwid, $banned) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
-            $insertRequest = "INSERT INTO `{$hwidsTableName}` (`login`, `hwid`, `banned`) VALUES (:login, :hwid, 0)";
+			$insertRequest = "INSERT INTO `{$hwidsTableName}` (`login`, `hwid`, `banned`) VALUES (:login, :hwid, :banned)";
             $arguments = array (
                 'login' => $login,
-                'hwid'  => $hwid
-            );            
+                'hwid'  => $hwid,
+                'banned'  => $banned
+            );
             
             $preparedRequest = null;
             $insertionStatus = $this->_dbConnector->ExecutePreparedRequest($insertRequest, $arguments, $preparedRequest);
@@ -405,22 +490,56 @@
             return $insertionStatus;
         }
         
-        public function SetHwidBanStatus($hwidsTableName, $hwid, $isBanned) {
+		//функция добавляет по-отдельности каждый hwid в базу
+		//не знал как одним запросом добавить в базу несколько hwid, поэтому такой кривозадый способ.
+		public function AddHwidStrInBase($hwidsTableName, $login, $hwidstr, $banned) 
+		{
+			$hwids = $this->ExplodeHwid($hwidstr);
+			
+			foreach ($hwids as $item)
+				$this->AddOneHwidInBase($hwidsTableName, $login, $item, (strpos($item, 'COM') === 0) ? 0 : $banned); //COM-hwid не баним автоматически
+		}
+		
+		public function SetHwidStrBanStatus($hwidsTableName, $hwidstr, $isBanned) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
-            $insertRequest = "UPDATE `{$hwidsTableName}` SET `banned`=:banned WHERE `hwid`=:hwid";
-            $arguments = array (
-                'banned' => $isBanned,
-                'hwid'   => $hwid
-            );            
+            $hwids = $this->ExplodeHwid($hwidstr);
             
+			$hwid_conditions = '';
+			$arguments = array (
+				'banned' => $isBanned
+			);
+			
+			$hwids_afterif = array();
+			foreach ($hwids as $item)
+				if (strpos($item, 'COM') !== 0) //COM-hwid не баним автоматически
+					$hwids_afterif[] = $item;
+			
+			$hwids_count = count($hwids_afterif);
+			$i = 0;
+			foreach ($hwids_afterif as $item)
+			{
+				$i++;
+				if ($i == $hwids_count)
+					$hwid_conditions .= '`hwid`=:hwid'.$i;
+				else
+					$hwid_conditions .= '`hwid`=:hwid'.$i.' OR ';
+				
+				$arguments += array (
+                'hwid'.$i => $item
+            	);
+			}
+            
+            $insertRequest = "UPDATE `{$hwidsTableName}` SET `banned`=:banned WHERE $hwid_conditions";
+			
             $preparedRequest = null;
             $setupBannedStatus = $this->_dbConnector->ExecutePreparedRequest($insertRequest, $arguments, $preparedRequest);
             $this->_dbConnector->ClosePreparedRequest($preparedRequest); 
-            return $setupBannedStatus;    
+            return $setupBannedStatus;
         }
         
-        public function SetPlayerHwidsBanStatus($hwidsTableName, $login, $isBanned) {
+        
+		public function SetPlayerHwidsBanStatus($hwidsTableName, $login, $isBanned) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
             $insertRequest = "UPDATE `{$hwidsTableName}` SET `banned`=:banned WHERE `login`=:login";

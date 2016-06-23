@@ -44,10 +44,10 @@
     $authStatus = $dbWorker->IsPlayerInBase($playersTableName, $login, $password);
     switch ($authStatus) {
         // Проверяем возможные ошибки:
-        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector', $encryptionKey);    
-        case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError(), $encryptionKey);
-        case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!', $encryptionKey);
-    } 
+        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector', $encryptionKey); break;
+        case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError(), $encryptionKey); break;
+        case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!', $encryptionKey); break;
+    }
    
     // Получаем ник в верном регистре:
     $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $login);
@@ -55,17 +55,24 @@
         SendErrorMessage('Не получилось извлечь логин в верном регистре!', $encryptionKey);
     }
     
-    // Проверяем бан по HWID:
+	
     if ($hwid !== null) {
-        $banStatus = $dbWorker->IsHwidBanned($hwidsTableName, $hwid);
+        $banStatus = $dbWorker->IsHwidStrBanned($hwidsTableName, $hwid);
         switch ($banStatus) {
             // Проверяем возможные ошибки:
-            case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector', $encryptionKey);
-            case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsHwidBanned: '.$dbWorker->GetLastDatabaseError(), $encryptionKey);
-            case DatabaseWorker::STATUS_USER_BANNED: SendErrorMessage('Пользователь забанен', $encryptionKey);
+            case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector', $encryptionKey); break;
+            case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsHwidBanned: '.$dbWorker->GetLastDatabaseError(), $encryptionKey); break;
+            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); break; //если прислан мусор вместо hwid, посылаем
+            case DatabaseWorker::STATUS_USER_BANNED:
+            	$dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 1); //автоматически добавляем и баним баним новые hwid пользователя
+            	$dbWorker->SetHwidStrBanStatus($hwidsTableName, $hwid, 1); //и баним все старые hwid
+            	SendErrorMessage('Пользователь забанен', $encryptionKey);
+            	break;
         }
-        $dbWorker->AddHwidInBase($hwidsTableName, $login, $hwid);
+        
+        $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
     }
+    else SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); //если прислан мусор вместо hwid, посылаем
     
     // Генерируем авторизационные данные:
     $uuid        = GenerateUUID($login);

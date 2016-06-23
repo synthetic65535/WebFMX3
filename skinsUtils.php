@@ -6,12 +6,13 @@
     include('webUtils/auxUtils.php');
     include('settings.php');
     
-    // Максимальные размеры изображения:
-    const MAX_SIZE = 1024 * 300;
-    const MAX_SCALING_COEFF = 4;
+    // Максимальные размеры изображения: // было 300 кб, стало 100
+    const MAX_SIZE = 1024 * 100;
+    const MAX_SCALING_COEFF = 4; // 16 для 1024x512
     const STD_WIDTH  = 64;
     const STD_HEIGHT = 32;
     const VALID_ASPECT_RATIO = STD_WIDTH / STD_HEIGHT;
+    const ALLOW_MINECRAFT_1_8_SKINS = true;
     const MAX_WIDTH  = STD_WIDTH  * MAX_SCALING_COEFF;
     const MAX_HEIGHT = STD_HEIGHT * MAX_SCALING_COEFF;
 
@@ -120,7 +121,7 @@
             $height = $imageInfo[HEIGHT];
             
             $aspectRatio = $width / $height;
-            if ($aspectRatio !== VALID_ASPECT_RATIO) {SendErrorMessage('Неверное соотношение сторон изображения!');}
+            if ($aspectRatio !== VALID_ASPECT_RATIO && !(ALLOW_MINECRAFT_1_8_SKINS && $aspectRatio == 1)) {SendErrorMessage('Неверное соотношение сторон изображения!');}
             
             if (($width > MAX_WIDTH) || ($height > MAX_HEIGHT)) {SendErrorMessage('Превышен максимальный размер изображения! Максимальный размер '.MAX_WIDTH.'x'.MAX_HEIGHT);}
             

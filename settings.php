@@ -14,7 +14,7 @@
     $playersColumnName = 'login'; 
 
     // Настройка файловой иерархии:
-    $workingFolder  = 'http://froggystyle.ru/WebFMX3';
+    $workingFolder  = 'http://myserver.com/fmx/';
     $skinsFolder    = 'Skins';
     $cloaksFolder   = 'Cloaks';
     $clientsFolder  = 'Clients';
@@ -29,9 +29,9 @@
     $defCloakName  = 'Default_cloak.png'; // Название стандартного плаща в папке $cloaksFolder
     
     // Настройки лаунчера:
-    $launcherMinVersion = 2;
-    $launcherLink32 = 'http://froggystyle.ru/WebFMX3/Launcher32.exe';
-    $launcherLink64 = 'http://froggystyle.ru/WebFMX3/Launcher64.exe';
+    $launcherMinVersion = 3;
+    $launcherLink32 = 'http://myserver.com/fmx/Launcher32.exe';
+    $launcherLink64 = 'http://myserver.com/fmx/Launcher64.exe';
     
     // Ключ шифрования (должен совпадать с ключом в лаунчере):
     $encryptionKey = 'FMXL3';

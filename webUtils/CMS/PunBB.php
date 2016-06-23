@@ -17,7 +17,7 @@
                 return $this::STATUS_USER_NOT_EXISTS;
             }
             
-            $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `login`=:login AND BINARY `password`=:password";
+            $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `username`=:login AND BINARY `password`=:password";
 
             $arguments = array (
                 'login'    => $login,
