@@ -42,15 +42,18 @@
 
     // Проверяем бан по HWID:
     if ($hwid !== null) {
-        $banStatus = $dbWorker->IsHwidBanned($hwidsTableName, $hwid);
+        $banStatus = $dbWorker->IsHwidStrBanned($hwidsTableName, $hwid);
         switch ($banStatus) {
             // Проверяем возможные ошибки:
             case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector');
             case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsHwidBanned: '.$dbWorker->GetLastDatabaseError());
+            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); break; //если прислан мусор вместо hwid, посылаем
             case DatabaseWorker::STATUS_USER_BANNED: SendErrorMessage('HWID забанен!');
         }
-        $dbWorker->AddHwidInBase($hwidsTableName, $login, $hwid);
+        $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
     }
+    else SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); //если прислан мусор вместо hwid, посылаем
+    
     
     $regStatus = $dbWorker->InsertPlayerInBase($playersTableName, $login, $password);
     $dbWorker->CloseDatabase();
@@ -59,5 +62,5 @@
         case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса InsertPlayerInBase: '.$dbWorker->GetLastDatabaseError());
         case DatabaseWorker::STATUS_REG_USER_ALREADY_EXISTS: SendErrorMessage('Пользователь уже есть в базе!');
         case DatabaseWorker::STATUS_REG_SUCCESS: SendSuccessfulMessage();
-    }    
+    }
 ?>
