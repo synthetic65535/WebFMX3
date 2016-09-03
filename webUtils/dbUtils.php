@@ -26,7 +26,7 @@
                 $this->_dbHandle = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
                 return isset($this->_dbHandle);
             } catch (PDOException $pdoException) {
-                $this->_lastPDOError = $pdoException->getMessage();
+                $this->_lastPDOError = $pdoException.getMessage();
                 return false;
             } 
         } 
@@ -65,8 +65,9 @@
         const STATUS_REG_USER_ALREADY_EXISTS = 0;
         
         // Результат IsPlayerInBase:
-        const STATUS_USER_EXISTS     = 1;
         const STATUS_USER_NOT_EXISTS = 0;
+        const STATUS_USER_EXISTS     = 1;
+        const STATUS_USER_BANNED     = 2;
         
         // Результат DoJoin:
         const STATUS_JOIN_SUCCESS        = 1;
@@ -89,9 +90,9 @@
         const STATUS_QUERY_USER_NOT_FOUND = 0;
         
         // Результат IsHwidBanned:
-        const STATUS_USER_BANNED     = 1;
         const STATUS_USER_NOT_BANNED = 0;
-        const STATUS_NO_HWID         = 2;
+		const STATUS_NO_HWID    	 = 1;
+		//const STATUS_USER_BANNED     = 2; такая константа уже есть
         
         // Ошибки подключения к БД:
         const STATUS_DB_OBJECT_NOT_PRESENT = -1;
@@ -111,7 +112,7 @@
         const CMS_XENFORO   = 'XenForo.php';
         const CMS_MCRSHOP   = 'CMSMinecraftShop.php';
 		
-        const CMS_TYPE = DatabaseWorker::CMS_CUSTOM; // <-- Здесь менять используемую CMS!
+        const CMS_TYPE = DatabaseWorker::CMS_PUNBB; // <-- Здесь менять используемую CMS!
         
         private $_dbConnector = null;
         
@@ -152,7 +153,7 @@
             $result = $this->_dbConnector->ExecutePreparedRequest($request, $arguments, $preparedRequest);
             if (!isset($preparedRequest) || !$result) {
                 return $this::STATUS_DB_ERROR;
-            }    
+            }
             
             $login = $preparedRequest->fetch(PDO::FETCH_ASSOC)[$playersColumnName];   
             $this->_dbConnector->ClosePreparedRequest($preparedRequest);
@@ -234,7 +235,7 @@
                 $queryResult = $this->_dbConnector->ExecutePreparedRequest($queryRequest, $arguments, $queryPreparedRequest);
                 if (!isset($queryPreparedRequest) || !$queryResult) {
                     $joinStatus = $this::STATUS_DB_ERROR;
-                }         
+                }
                 
                 $username = $queryPreparedRequest->fetch(PDO::FETCH_ASSOC)['username'];
                 $joinStatus = $username !== null ? $this::STATUS_JOIN_SUCCESS : $this::STATUS_JOIN_USER_NOT_FOUND;
@@ -242,7 +243,7 @@
                 $this->_dbConnector->ClosePreparedRequest($queryPreparedRequest);
             } else {
                 $joinStatus = $this::STATUS_JOIN_USER_NOT_FOUND;
-            }            
+            }
             return $joinStatus;
         } 
         
@@ -274,7 +275,7 @@
                 $updatingRequest = "UPDATE `{$tokensTableName}` ".
                                    "SET `serverId`='null' ".
                                    "WHERE `serverId`=:serverId AND `username`=:username AND `uuid`=:uuid ".
-                                   "LIMIT 1";    
+                                   "LIMIT 1";
                 $updatingArguments = array (
                     'serverId'    => $serverId,
                     'username'    => $username,
@@ -285,7 +286,7 @@
                 $updatingResult = $this->_dbConnector->ExecutePreparedRequest($updatingRequest, $updatingArguments, $updatingPreparedRequest);
                 if (!isset($updatingPreparedRequest) || !$updatingResult) {
                     return $this::STATUS_DB_ERROR;
-                }                
+                }
 
                 $hasJoinedStatus = $updatingPreparedRequest->rowCount() > 0 ? $this::STATUS_HAS_JOINED_SUCCESS : $this::STATUS_HAS_JOINED_USER_NOT_FOUND;
                 $this->_dbConnector->ClosePreparedRequest($updatingPreparedRequest);
@@ -293,7 +294,7 @@
             } else {
                 $hasJoinedStatus = $this::STATUS_HAS_JOINED_USER_NOT_FOUND;
             }
-                      
+            
             return $hasJoinedStatus;
         } 
         
@@ -341,7 +342,7 @@
                 return $this::STATUS_DB_ERROR;
             }
             
-            $joinServerStatus = ($insertingPreparedRequest->rowCount() > 0) ? $this::STATUS_JOIN_SERVER_SUCCESS : $this::STATUS_JOIN_SERVER_USER_NOT_FOUND;            
+            $joinServerStatus = ($insertingPreparedRequest->rowCount() > 0) ? $this::STATUS_JOIN_SERVER_SUCCESS : $this::STATUS_JOIN_SERVER_USER_NOT_FOUND;
             $this->_dbConnector->ClosePreparedRequest($insertingPreparedRequest);
             
             return $joinServerStatus;
@@ -367,7 +368,7 @@
                 return $this::STATUS_DB_ERROR;
             }
             
-            $checkServerStatus = ($queryPreparedRequest->fetchColumn()) ? $this::STATUS_CHECK_SERVER_SUCCESS : $this::STATUS_CHECK_SERVER_USER_NOT_FOUND;            
+            $checkServerStatus = ($queryPreparedRequest->fetchColumn()) ? $this::STATUS_CHECK_SERVER_SUCCESS : $this::STATUS_CHECK_SERVER_USER_NOT_FOUND;
             $this->_dbConnector->ClosePreparedRequest($queryPreparedRequest);
             
             return $checkServerStatus;
@@ -392,7 +393,13 @@
 				($hwid === '1171') ||
 				($hwid === '1172') ||
 				($hwid === '0123456789ABCDE0') ||
-				($hwid === '0123456789ABCDE1')
+				($hwid === '0123456789ABCDE1') /*||
+				($hwid === 'COM0D4C83C4ADBC9F8FA99D64B3DE4F07A4') ||
+				($hwid === 'COM6D457289408B1963DAAE52B23DC0475E') ||
+				($hwid === 'COMA0D933C7EDF012962B1CE7A885A0DE2E') ||
+				($hwid === 'COM6EF9DC430B89E974DC53EC7E78EB9A68') ||
+				($hwid === 'COMFB506B92F7651439110445EC9AECFA48') ||
+				($hwid === 'COM3E11465C6F6A2DBE4707B044A58958B4')*/
 				;
 		}
 		
@@ -451,7 +458,7 @@
 				$arguments += array (
                 'hwid'.$i => $item
             	);
-            	
+            
 			}
 			
 			$request = "SELECT COUNT(1) FROM `{$hwidsTableName}` WHERE ($hwid_conditions) AND `banned`=true";
@@ -471,7 +478,7 @@
 		function AddOneHwidInBase($hwidsTableName, $login, $hwid, $banned) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
-            $insertRequest = "INSERT INTO `{$hwidsTableName}` (`login`, `hwid`, `banned`) VALUES (:login, :hwid, :banned)";
+			$insertRequest = "INSERT INTO `{$hwidsTableName}` (`login`, `hwid`, `banned`) VALUES (:login, :hwid, :banned)";
             $arguments = array (
                 'login' => $login,
                 'hwid'  => $hwid,
@@ -540,12 +547,12 @@
             $arguments = array (
                 'banned' => $isBanned,
                 'login'  => $login
-            );            
+            );
             
             $preparedRequest = null;
             $setupBannedStatus = $this->_dbConnector->ExecutePreparedRequest($insertRequest, $arguments, $preparedRequest);
             $this->_dbConnector->ClosePreparedRequest($preparedRequest); 
-            return $setupBannedStatus;    
+            return $setupBannedStatus;
         }
         
     }
