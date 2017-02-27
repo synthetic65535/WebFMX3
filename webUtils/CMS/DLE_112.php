@@ -24,6 +24,6 @@
 				$status |= (ord($ret[$i]) ^ ord($hash[$i]));
 			// Конец проверки
 			
-			$authStatus = $status === 0 ? ? $this::STATUS_USER_EXISTS : $this::STATUS_USER_NOT_EXISTS;
+			$authStatus = $status === 0 ? $this::STATUS_USER_EXISTS : $this::STATUS_USER_NOT_EXISTS;
 			$this->_dbConnector->ClosePreparedRequest($preparedRequest);
 ?>
