@@ -121,7 +121,8 @@
             $height = $imageInfo[HEIGHT];
             
             $aspectRatio = $width / $height;
-            if ($aspectRatio !== VALID_ASPECT_RATIO && !(ALLOW_MINECRAFT_1_8_SKINS && $aspectRatio == 1)) {SendErrorMessage('Неверное соотношение сторон изображения!');}
+            if ((($imageType == 'skin') && ($aspectRatio !== VALID_ASPECT_RATIO && !(ALLOW_MINECRAFT_1_8_SKINS && $aspectRatio == 1))) ||
+                (($imageType == 'cloak') && ($aspectRatio !== VALID_ASPECT_RATIO))) {SendErrorMessage('Неверное соотношение сторон изображения!');}
             
             if (($width > MAX_WIDTH) || ($height > MAX_HEIGHT)) {SendErrorMessage('Превышен максимальный размер изображения! Максимальный размер '.MAX_WIDTH.'x'.MAX_HEIGHT);}
             
