@@ -55,10 +55,10 @@
     $login    = base64_decode(RepairBase64($encodedLogin));
     $password = base64_decode(RepairBase64($encodedPassword));
     EncryptDecryptVerrnam($login   , strlen($login)   , $encryptionKey, strlen($encryptionKey));
-    EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));    
+    EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));
     
-    if (HasRestrictedSymbols($login.$password)) {
-        SendErrorMessage('Логин и/или пароль пустые или содержат недопустимые символы!');
+    if (LoginHasRestrictedSymbols($login)) {
+        SendErrorMessage('Логин пустой или содержит недопустимые символы!');
     }
     
     // Создаём объект соединения с базой:
