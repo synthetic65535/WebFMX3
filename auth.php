@@ -29,6 +29,10 @@
     EncryptDecryptVerrnam($login   , strlen($login)   , $encryptionKey, strlen($encryptionKey));
     EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));
     
+    if (LoginHasRestrictedSymbols($login)) {
+        SendErrorMessage('Логин пустой или содержит недопустимые символы!', $encryptionKey);
+    }
+    
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
     if ($dbWorker === null) {
@@ -49,7 +53,7 @@
         case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!', $encryptionKey); break;
         case DatabaseWorker::STATUS_USER_BANNED: SendErrorMessage('Пользователь забанен', $encryptionKey); break;
     }
-   
+    
     // Получаем ник в верном регистре:
     $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $login);
     if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($login === null)) {

@@ -36,14 +36,14 @@
     function GetImage($workingFolder, $objectName, $defObjectName, &$encodedImage, $returnDefaultImage = true) {
         if (file_exists($imagePath = $workingFolder.'/'.$objectName)) {
             $encodedImage = base64_encode(file_get_contents($imagePath));
-            return true;   
+            return true;
         } elseif ($returnDefaultImage && file_exists($imagePath = $workingFolder.'/'.$defObjectName)) {
             $encodedImage = base64_encode(file_get_contents($imagePath));
             return true;
         } else {
             $encodedImage = null;
             return false;
-        }      
+        }
     }
     
     $encodedLogin    = filter_input(INPUT_POST, 'login'     , FILTER_SANITIZE_STRING);
@@ -76,19 +76,20 @@
     $authStatus = $dbWorker->IsPlayerInBase($playersTableName, $login, $password);
     switch ($authStatus) {
         // Проверяем возможные ошибки:
-        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector');
-        case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError());
-        case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!');
-    } 
-
+        case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector'); break;
+        case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsPlayerInBase: '.$dbWorker->GetLastDatabaseError()); break;
+        case DatabaseWorker::STATUS_USER_NOT_EXISTS: SendErrorMessage('Неверный логин или пароль!'); break;
+        case DatabaseWorker::STATUS_USER_BANNED: SendErrorMessage('Пользователь забанен'); break;
+    }
+    
     // Получаем ник в верном регистре:
     $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $login);
     if (($caseValidationStatus === $dbWorker::STATUS_QUERY_USER_NOT_FOUND) || ($login === null)) {
         SendErrorMessage('Не получилось извлечь логин в верном регистре!');
     }
-
+    
     $dbWorker->CloseDatabase();
-
+    
     switch ($imageType) {
         case 'skin':
             $workingFolder = $skinsFolder;

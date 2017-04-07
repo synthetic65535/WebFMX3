@@ -14,8 +14,8 @@
         return true;
     }
     
-    function HasRestrictedSymbols($string) {
-        return !preg_match('/^[0-9a-zA-Z+\=\-_]+$/', $string);
+    function LoginHasRestrictedSymbols($string) {
+        return !preg_match('/^[0-9a-zA-Z_-]+$/', $string);
     }
     
     function RepairBase64($base64) {
