@@ -3,7 +3,7 @@
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             
             $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `name`=:login AND BINARY `password`=:password";
-    
+            
             $arguments = array (
                 'login'    => $login,
                 'password' => md5(md5($password))

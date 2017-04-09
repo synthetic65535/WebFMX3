@@ -1,12 +1,12 @@
 <?php
-/*
+    /*
     Перед подключением к серверу клиент посылает этому скрипту JSON следующего содержания:
     {
         "accessToken":"[]",
         "selectedProfile":"00000000000000000000000000000000",
         "serverId":"-5dd86675917cd161b0d011aec899f236b3878c42"
     }
-
+    
     Требуется сравнить сгенерированные при авторизации accessToken и selectedProfile (он же UUID) с полученными в JSON'e,
     если успешно - записать в базу serverId для данного игрока и вернуть JSON следующего содержания:
     {
@@ -18,10 +18,10 @@
         "error" : "Bad login",
         "errorMessage" : "Сообщение об ошибке"
     }
-*/
-
+    */
+    
     header('Content-Type: application/json; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('settings.php');
     
@@ -30,7 +30,7 @@
     }
     
     function SendSuccessfulMessage($uuid, $name) {
-        exit('{"id":"'.$uuid.'","name":"'.$name.'"}'); 
+        exit('{"id":"'.$uuid.'","name":"'.$name.'"}');
     }
     
     $json = json_decode(file_get_contents('php://input'));
@@ -42,12 +42,12 @@
     $uuid        = $json->selectedProfile;
     $serverId    = $json->serverId;
     $username    = null;
-
+    
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
     if ($dbWorker === null) {
         SendErrorMessage('dbWorker error!', 'Unable to create dbWorker!');
-    }    
+    }
     
     // Подключаемся к базе:
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {

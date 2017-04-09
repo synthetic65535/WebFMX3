@@ -1,5 +1,5 @@
 <?php
-
+    
     include('webUtils/dbUtils.php');
     include('settings.php');
     
@@ -11,7 +11,7 @@
     $dbWorker = new DatabaseWorker();
     if ($dbWorker === null) {
         exit('Не удалось создать dbWorker!');
-    }    
+    }
     
     // Подключаемся к базе:
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
@@ -28,12 +28,12 @@
     if ($isHwidNeedToBeBanned) {
         $status = $dbWorker->SetHwidBanStatus($hwidsTableName, $data, $banStatus);
     } else {
-        $status = $dbWorker->SetPlayerHwidsBanStatus($hwidsTableName, $data, $banStatus);
+        $status = $dbWorker->SetHwidStrBanStatus($hwidsTableName, $data, $banStatus);
     }
     
     // Оцениваем результат бана:
     if ($status) {
-        echo 'Успешно!';    
+        echo 'Успешно!';
     } else {
         echo 'Не удалось выполнить запрос! '.$dbWorker->GetLastDatabaseError();
     }

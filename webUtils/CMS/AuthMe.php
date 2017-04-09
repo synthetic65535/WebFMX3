@@ -7,16 +7,16 @@
             $passPreparedRequest = null;
             
             $preRequestStatus = $this->_dbConnector->ExecutePreparedRequest($passRequest, $passArguments, $passPreparedRequest);
-                
+            
             if (!isset($passPreparedRequest) || !$preRequestStatus) {
                 return $this::STATUS_DB_ERROR;
             }
-                
+            
             $hash = $passPreparedRequest->fetch(PDO::FETCH_ASSOC)['password'];
             if ($hash === null) {
                 return $this::STATUS_USER_NOT_EXISTS;
             }
-        
+            
             $exp = preg_split('/\\$/', $hash);
             $salt = $exp[2];
 			

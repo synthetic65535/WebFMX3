@@ -5,14 +5,20 @@
     $dbUser     = 'h7936_dbuser';
     $dbPassword = 'ryA60BPH';
     
+    // Пароль для запуска jsongen.php
+    $jsonGenPassword = 'password';
+    
     // Названия таблиц с данными игроков:
     $playersTableName = 'players';
     $tokensTableName  = 'tokens';
     $hwidsTableName   = 'hwids';
-
+    
     // Имя колонки с логинами игроков в таблице $playersTableName:
-    $playersColumnName = 'login'; 
-
+    $playersColumnName = 'login';
+    
+    // Включить регистрацию через лаунчер
+    $registrationFromLauncher = false;
+    
     // Настройка файловой иерархии:
     $workingFolder  = 'http://myserver.com/fmx/';
     $skinsFolder    = 'Skins';

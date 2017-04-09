@@ -1,7 +1,7 @@
 <?php
-
+    
     header('Content-Type: application/json; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('webUtils/auxUtils.php');
     include('settings.php');
@@ -12,6 +12,10 @@
     
     function SendSuccessfulMessage() {
         exit('{"status":"success"}');
+    }
+    
+    if (!$registrationFromLauncher) {
+        SendErrorMessage('Регистрация через лаунчер отключена в настройках веб-части!');
     }
     
     // Получаем данные:
@@ -26,7 +30,7 @@
     EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));
     
     // На всякий случай пароль проверяем по тем же правилам, что и логин
-    if (LoginHasRestrictedSymbols($login.$password)) {
+    if ((strlen($password) == 0) || (strlen($login) == 0) || LoginHasRestrictedSymbols($login.$password)) {
         SendErrorMessage('Логин и/или пароль пустые или содержат недопустимые символы!');
     }
     

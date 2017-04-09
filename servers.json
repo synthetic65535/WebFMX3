@@ -1,95 +1,101 @@
 {
-    "java_info" : {
-        "java_version" : 8,
+	"java_info" : {
+	"java_version" : 8,
 
-        "java32_folder" : "Java/x32",
-        "java64_folder" : "Java/x64",
+	"java32_folder" : "Java/x32",
+	"java64_folder" : "Java/x64",
 
-        "jvm32_library_path" : "bin/client/jvm.dll",
-        "jvm64_library_path" : "bin/server/jvm.dll",
+	"jvm32_library_path" : "bin/client/jvm.dll",
+	"jvm64_library_path" : "bin/server/jvm.dll",
 
-        "jvm32_arguments" : "-Xmn128M -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
-        "jvm64_arguments" : "-Xmn128M -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
-        
-        "checked_folders" : [
-            {
-                "path" : "lib",
-                "mask" : "*.jar",
-                "recursive" : "true"
-            },
-            {
-                "path" : "lib",
-                "mask" : "*.exe",
-                "recursive" : "true"
-            },
-            {
-                "path" : "bin",
-                "mask" : "*.dll",
-                "recursive" : "true"
-            },
-            {
-                "path" : "bin",
-                "mask" : "*.exe",
-                "recursive" : "true"
-            }
-        ]
-    },
-    
-    "servers" : [
-        {
-            "name" : "Sky Server",
-            "info" : "1.8.8 + OptiFine + GLSL Shaders",
+	"jvm32_arguments" : "-Xmn128m -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
 
-            "ip"   : "95.79.30.167",
-            "port" : "25565",
+	"jvm64_arguments" : "-Xmn128m -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
 
-            "client_folder" : "Clients/Sandbox",
-            "natives_path"  : "versions/$client_version/natives",
-            "assets_path"   : "assets",
-            
-            "asset_index" : "1.8",
-            "version"     : "Sandbox",
-            
-            "main_class" : "net.minecraft.launchwrapper.Launch",
-            "arguments"  : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --tweakClass optifine.OptiFineTweaker",
-            
-            "jars" : [
-                {"name" : "libraries/*.jar"},
-                {"name" : "versions/Sandbox/OptiFine1.8.8.jar"}
-            ],
+	"checked_folders" : [
+		{
+			"path" : "lib",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "bin",
+			"mask" : "*",
+			"recursive" : "true"
+		}
+	]
+	},
+
+	"servers" : [
+	{
+		"name" : "Industrial Server",
+		"info" : "1.7.10 + Forge + OptiFine",
+		"ip" : "123.45.67.89",
+		"port" : "25565",
+		"legacy_launch" : "true",
+		"!preview" : "Previews/Industrial.png",
+		"preview" : "PREVIEW_INDUSTRIAL",
+		"client_folder" : "Clients/Industrial",
+		"natives_path"  : "versions/$client_version/natives",
+		"assets_path" : "assets",
+		"asset_index" : "1.7.10",
+		"version" : "ForgeOptiFine 1.7.10",
+		"main_class" : "net.minecraft.launchwrapper.Launch",
+		
+		"arguments"  : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 123.45.67.89 --port 25565 --tweakClass optifine.OptiFineTweaker",
+		
+		"jars" : [
+			{"name" : "libraries/*.jar"},
+			{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+		],
 			
-            "checked_folders" : [
-                {
-                    "path" : "assets/objects",
-                    "mask" : "*",
-                    "recursive"  : "true"
-                },
-                {
-                    "path" : "assets/indexes",
-                    "mask" : "*.jar",
-                    "recursive" : "true"
-                },
-                {
-                    "path" : "libraries",
-                    "mask" : "*.jar",
-                    "recursive"  : "true",
-                    "exclusives" : [
-                        {"path" : "authlib-1.5.17.jar"}
-                    ]
-                },
-                {
-                    "path" : "mods",
-                    "mask" : "*",
-                    "recursive" : "true"
-                },
-                {
-                    "path" : "versions",
-                    "mask" : "*",
-                    "recursive" : "true"
-                }
-            ],
-			
-			"!preview" : "Previews/Sky.png"
-        }
-    ]
+		"checked_folders" : [
+		{
+			"path" : "",
+			"mask" : "servers.dat",
+			"recursive" : "false"
+		},
+		{
+			"path" : "assets/objects",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "assets/indexes",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "libraries",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "versions",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "mods",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "config/IC2",
+			"mask" : "*",
+			"recursive" : "true"
+		},
+		{
+			"path" : "resourcepacks",
+			"mask" : "OriginalFontFix.zip",
+			"recursive" : "false"
+		},
+		{
+			"path" : "resourcepacks",
+			"mask" : "*.png",
+			"recursive" : "true"
+		}
+		]
+	}
+	]
 }

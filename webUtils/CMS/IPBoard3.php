@@ -11,14 +11,14 @@
             if (!isset($saltPreparedRequest) || !$getSaltStatus) {
                 return $this::STATUS_DB_ERROR;
             }
-                
+            
             $salt = $saltPreparedRequest->fetch(PDO::FETCH_ASSOC)['members_pass_salt'];
             if ($salt === null) {
                 return $this::STATUS_USER_NOT_EXISTS;
             }
             
             $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `name`=:login AND BINARY `members_pass_hash`=:password";
-    
+            
             $arguments = array (
                 'login'    => $login,
                 'password' => md5(md5($salt).md5($password))

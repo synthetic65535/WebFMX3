@@ -18,7 +18,7 @@
             }
             
             $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `name`=:login AND BINARY `members_pass_hash`=:password";
-    
+            
             $arguments = array (
                 'login'    => $login,
                 'password' => crypt($password, '$2a$13$' . $salt)

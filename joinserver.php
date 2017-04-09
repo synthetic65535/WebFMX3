@@ -1,19 +1,19 @@
 <?php
-/*
+    /*
     При подключении к серверу клиент посылает этому скрипту GET'ом 3 поля::
       "session"  : "[]",
       "user"     : "Ник игрока",
       "serverId" : "-5dd86675917cd161b0d011aec899f236b3878c42"
-
+    
     Требуется сравнить сгенерированные при авторизации session (accessToken) и user (ник игрока) с полученными в запросе,
     если успешно - записать в базу serverId для данного игрока и вернуть 'OK' если всё нормально и 'Bad login', если данные не совпали.
-*/
-
+    */
+    
     header('Content-Type: text/plain; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('settings.php');
-
+    
     function SendSuccessfulMessage() {
         exit('OK');
     }
@@ -25,11 +25,11 @@
     function SendErrorMessage($reason) {
         exit($reason);
     }
-
+    
     // Получаем данные:
     $accessToken = filter_input(INPUT_GET, 'sessionId' , FILTER_SANITIZE_STRING);
     $username    = filter_input(INPUT_GET, 'user'    , FILTER_SANITIZE_STRING);
-    $serverId    = filter_input(INPUT_GET, 'serverId', FILTER_SANITIZE_STRING);   
+    $serverId    = filter_input(INPUT_GET, 'serverId', FILTER_SANITIZE_STRING);
     
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
@@ -40,7 +40,7 @@
     // Подключаемся к базе:
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
         SendErrorMessage('Не удалось подключиться к БД: '.$dbWorker->GetLastDatabaseError());
-    }    
+    }
     
     $checkServerStatus = $dbWorker->DoJoinServer($tokensTableName, $accessToken, $username, $serverId);
     $dbWorker->CloseDatabase();

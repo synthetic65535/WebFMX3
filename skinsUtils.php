@@ -1,7 +1,7 @@
 <?php
-
+    
     header('Content-Type: application/json; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('webUtils/auxUtils.php');
     include('settings.php');
@@ -15,7 +15,7 @@
     const ALLOW_MINECRAFT_1_8_SKINS = true;
     const MAX_WIDTH  = STD_WIDTH  * MAX_SCALING_COEFF;
     const MAX_HEIGHT = STD_HEIGHT * MAX_SCALING_COEFF;
-
+    
     // Индексы в массиве getimagesize:
     const WIDTH      = 0;
     const HEIGHT     = 1;
@@ -133,7 +133,7 @@
             break;
             
         case 'delete':
-            $objectPath = $workingFolder.'/'.$objectName; 
+            $objectPath = $workingFolder.'/'.$objectName;
             if (file_exists($objectPath)) {unlink($objectPath);}
             GetImage($workingFolder, $objectName, $defObjectName, $encodedImage);
             SendSuccessfulMessage($encodedImage);

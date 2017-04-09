@@ -1,19 +1,19 @@
 <?php
-
-/*
+    
+    /*
     При подключении клиента сервер посылает этому скрипту GET'ом 2 поля:
       "user"     : "Ник игрока",
       "serverId" : "-5dd86675917cd161b0d011aec899f236b3878c42"
-  
+    
     Требуется проверить, есть ли в базе для данного ника данный serverId.
     Если есть, возвращаем 'YES', если нет - 'NO'
-*/
-
+    */
+    
     header('Content-Type: text/plain; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('settings.php');
-
+    
     function SendSuccessfulMessage() {
         exit('YES');
     }
@@ -25,11 +25,11 @@
     function SendErrorMessage($reason) {
         exit($reason);
     }
-       
+    
     // Получаем данные:
     $username = filter_input(INPUT_GET, 'user'    , FILTER_SANITIZE_STRING);
     $serverId = filter_input(INPUT_GET, 'serverId', FILTER_SANITIZE_STRING);
-
+    
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
     if ($dbWorker === null) {
@@ -39,7 +39,7 @@
     // Подключаемся к базе:
     if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
         SendErrorMessage('Не удалось подключиться к БД: '.$dbWorker->GetLastDatabaseError());
-    }    
+    }
     
     // Получаем ник в верном регистре:
     $caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $username);

@@ -1,11 +1,11 @@
 <?php
-
+    
     header('Content-Type: application/json; charset=utf-8');
-
+    
     include('webUtils/dbUtils.php');
     include('webUtils/auxUtils.php');
     include('settings.php');
-
+    
     // Отправить сообщение об ошибке и завершить скрипт:
     function SendErrorMessage($reason, $encryptionKey = '') {
         $errorMessage = array (
@@ -60,24 +60,23 @@
         SendErrorMessage('Не получилось извлечь логин в верном регистре!', $encryptionKey);
     }
     
-	
     if ($hwid !== null) {
         $banStatus = $dbWorker->IsHwidStrBanned($hwidsTableName, $hwid);
         switch ($banStatus) {
             // Проверяем возможные ошибки:
             case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector', $encryptionKey); break;
             case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsHwidBanned: '.$dbWorker->GetLastDatabaseError(), $encryptionKey); break;
-            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); break; //если прислан мусор вместо hwid, посылаем
+            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); break; // Если прислан мусор вместо hwid, посылаем
             case DatabaseWorker::STATUS_USER_BANNED:
-            	$dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 1); //автоматически добавляем и баним баним новые hwid пользователя
-            	$dbWorker->SetHwidStrBanStatus($hwidsTableName, $hwid, 1); //и баним все старые hwid
-            	SendErrorMessage('Пользователь забанен', $encryptionKey);
-            	break;
+                $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 1); // Автоматически добавляем и баним баним новые hwid пользователя
+                $dbWorker->SetHwidStrBanStatus($hwidsTableName, $hwid, 1); // И баним все старые hwid
+                SendErrorMessage('Пользователь забанен', $encryptionKey);
+                break;
         }
         
         $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
     }
-    else SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); //если прислан мусор вместо hwid, посылаем
+    else SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.', $encryptionKey); // Если прислан мусор вместо hwid, посылаем
     
     // Генерируем авторизационные данные:
     $uuid        = GenerateUUID($login);
@@ -91,8 +90,8 @@
     }
     
     $dbWorker->CloseDatabase();
-
-// Возвращаем информацию о пользователе, клиентах, джаве и лаунчере:
+    
+    // Возвращаем информацию о пользователе, клиентах, джаве и лаунчере:
     
     // Формируем информацию о лаунчере:
     $launcherInfo = array (
@@ -122,7 +121,7 @@
     } elseif (file_exists($relativeDefaultCloakPath = $cloaksFolder.'/'.$defCloakName)) {
         $userInfo['cloak'] = $workingFolder.'/'.$relativeDefaultCloakPath;
     }
-
+    
     // Общая структура ответа:
     $response = array (
         'status'        => 'success',
@@ -140,7 +139,7 @@
         SendErrorMessage('Некорректный формат JSON-файла настроек клиентов!', $encryptionKey);
     }
     $response['servers_info'] = $clientsSettings;
-
+    
     $responseJson = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     EncryptDecryptVerrnam($responseJson, strlen($responseJson), $encryptionKey, strlen($encryptionKey));
     echo $responseJson;
