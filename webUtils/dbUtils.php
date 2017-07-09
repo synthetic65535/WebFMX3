@@ -101,7 +101,8 @@
         // Варианты CMS:
         const CMS_CUSTOM    = 'Custom.php';
         const CMS_DLE       = 'DLE.php'; // Старые версии DLE
-        const CMS_DLE_112   = 'DLE_112.php'; // DLE 11.2+
+        const CMS_DLE_112   = 'DLE_112.php'; // DLE 11.2
+        const CMS_DLE_113   = 'DLE_113.php'; // DLE 11.3
         const CMS_WEBMCR    = 'WebMCR.php';
         const CMS_WORDPRESS = 'WordPress.php';
         const CMS_PUNBB     = 'PunBB.php';
@@ -376,11 +377,12 @@
 		// Является ли id-шник флешкой
 		function IsItFlashDrive($hwid) {
 			return
-				(strpos($hwid, 'AA0000000000') === 0) || // https://www.google.ru/search?q=AA00000000000485&es_sm=93 https://www.google.ru/search?q=AA00000000000489&es_sm=93
+				(preg_match('/^AA000000000[0-9]*$/', $hwid)) || // AA00000000000485, AA00000000000489, AA00000000012108
 				(strpos($hwid, '058F') === 0) || // 058F63666433 058F312D81B 058F312D81B 058F63666485 058F63666485 058F312D81B 058F63666485 058F63626370 058F63626371 058F63626372 058F63626373 058F0O1111B1 058F63666485 058F0O1111B1 058F0O1111B1
 				($hwid === '801130168383') || // https://www.google.ru/webhp#q=801130168383
-				($hwid === '20090516388200000') || // https://www.google.ru/webhp#q=20090516388200000
+				(preg_match('/^20[0-9]{10}00000$/', $hwid)) || // 20090516388200000, 20071114173400000
 				($hwid === '130818V01') || // https://www.google.ru/webhp#q=130818V01
+				($hwid === '000000000563') || // https://www.google.ru/webhp#q=000000000563
 				(preg_match('/^0*([0-9]?|123)$/', $hwid)) // 00000000000006, 0000000000000001, 00000000000123
 				;
 		}

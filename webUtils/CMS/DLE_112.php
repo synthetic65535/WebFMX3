@@ -2,7 +2,7 @@
 		# DLE 11.2+:
 			if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
 			
-			$request = "SELECT COUNT(1) FROM `dle_users` WHERE `name`=:login";
+			$request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `name`=:login";
 			
 			$arguments = array ('login' => $login);
 			
