@@ -1,10 +1,10 @@
 <?php
 	/*
-	Ïðè äîáàâëåíèè èãðîêà â ïðèâàò WorldGuard îòïðàâëÿåò ýòîìó ñêðèïòó JSON ñëåäóþùåãî ñîäåðæàíèÿ:
+	ÐŸÑ€Ð¸ Ð´Ð¾Ð±Ð°Ð²Ð»ÐµÐ½Ð¸Ð¸ Ð¸Ð³Ñ€Ð¾ÐºÐ° Ð² Ð¿Ñ€Ð¸Ð²Ð°Ñ‚ WorldGuard Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð»ÑÐµÑ‚ ÑÑ‚Ð¾Ð¼Ñƒ ÑÐºÑ€Ð¸Ð¿Ñ‚Ñƒ JSON ÑÐ»ÐµÐ´ÑƒÑŽÑ‰ÐµÐ³Ð¾ ÑÐ¾Ð´ÐµÑ€Ð¶Ð°Ð½Ð¸Ñ:
 		["synthetic","mokko","cookiezi"]
-	À íàäî âåðíóòü:
+	Ð Ð½Ð°Ð´Ð¾ Ð²ÐµÑ€Ð½ÑƒÑ‚ÑŒ:
 		[{"id":"7686015f586e3bebaa3646f30d0682d9","name":"synthetic"},{"id":"2427a68bfa5d374da2cc724a9ce45f37","name":"Mokko"},{"id":"3444faa8743e3fabb2152cfc6f520e72","name":"Cookiezi"}]
-	Êîë÷åñòâî íèêíåéìîâ îò 1 äî 100. Ñî ñêîðîñòüþ íå áîëåå 600 èãðîêîâ çà 10 ìèíóò ( https://www.spigotmc.org/threads/using-the-mojang-api.95092/#post-1042758 )
+	ÐšÐ¾Ð»Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð½Ð¸ÐºÐ½ÐµÐ¹Ð¼Ð¾Ð² Ð¾Ñ‚ 1 Ð´Ð¾ 100. Ð¡Ð¾ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒÑŽ Ð½Ðµ Ð±Ð¾Ð»ÐµÐµ 600 Ð¸Ð³Ñ€Ð¾ÐºÐ¾Ð² Ð·Ð° 10 Ð¼Ð¸Ð½ÑƒÑ‚ ( https://www.spigotmc.org/threads/using-the-mojang-api.95092/#post-1042758 )
 	*/
 	
 	header('Content-Type: application/json; charset=utf-8');
@@ -26,20 +26,20 @@
 		SendErrorMessage('Big Request', 'uuid.php received too much usernames!');
 	}
 	
-	// Ñîçäà¸ì îáúåêò ñîåäèíåíèÿ ñ áàçîé:
+	// Ð¡Ð¾Ð·Ð´Ð°Ñ‘Ð¼ Ð¾Ð±ÑŠÐµÐºÑ‚ ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð¸Ñ Ñ Ð±Ð°Ð·Ð¾Ð¹:
 	$dbWorker = new DatabaseWorker();
 	if ($dbWorker === null) {
 		SendErrorMessage('dbWorker error!', 'Unable to create dbWorker!');
 	}
 	
-	// Ïîäêëþ÷àåìñÿ ê áàçå:
+	// ÐŸÐ¾Ð´ÐºÐ»ÑŽÑ‡Ð°ÐµÐ¼ÑÑ Ðº Ð±Ð°Ð·Ðµ:
 	if (!$dbWorker->SetupDatabase($dbHost, $dbName, $dbUser, $dbPassword)) {
 		SendErrorMessage('dbWorker error!', 'Unable to connect to database!');
 	}
 	
 	$response = '';
 	foreach ($json_data as $username) {
-		// Ïîëó÷àåì íèê â âåðíîì ðåãèñòðå:
+		// ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð½Ð¸Ðº Ð² Ð²ÐµÑ€Ð½Ð¾Ð¼ Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ðµ:
 		if ($username != null) {
 			$caseValidationStatus = $dbWorker->GetValidCasedLogin($playersTableName, $playersColumnName, $username);
 			if ($caseValidationStatus !== $dbWorker::STATUS_QUERY_USER_NOT_FOUND) {
