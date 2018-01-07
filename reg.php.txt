@@ -21,17 +21,26 @@
     // Получаем данные:
     $encodedLogin    = filter_input(INPUT_POST, 'login'   , FILTER_SANITIZE_STRING);
     $encodedPassword = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-    $hwid            = filter_input(INPUT_POST, 'hwid'    , FILTER_SANITIZE_STRING);
+    $encodedHwid            = filter_input(INPUT_POST, 'hwid'    , FILTER_SANITIZE_STRING);
     
     // Расшифровываем логин и пароль:
     $login    = base64_decode(RepairBase64($encodedLogin));
     $password = base64_decode(RepairBase64($encodedPassword));
+    $hwid = base64_decode(RepairBase64($encodedHwid));
     EncryptDecryptVerrnam($login   , strlen($login)   , $encryptionKey, strlen($encryptionKey));
     EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));
+    EncryptDecryptVerrnam($hwid, strlen($hwid), $encryptionKey, strlen($encryptionKey));
     
     // На всякий случай пароль проверяем по тем же правилам, что и логин
     if ((strlen($password) == 0) || (strlen($login) == 0) || LoginHasRestrictedSymbols($login.$password)) {
         SendErrorMessage('Логин и/или пароль пустые или содержат недопустимые символы!');
+    }
+    
+    // Проверка HWID на наличие изменений
+    $hwidСhecksum = substr($hwid, -32);
+    $hwid = substr($hwid, 0, -36);
+    if (md5($hwid) !== $hwidСhecksum) {
+        SendErrorMessage('Неверные сведения об оборудовании!', $encryptionKey);
     }
     
     // Создаём объект соединения с базой:
@@ -52,12 +61,12 @@
             // Проверяем возможные ошибки:
             case DatabaseWorker::STATUS_DB_OBJECT_NOT_PRESENT: SendErrorMessage('Не создан объект dbConnector'); break;
             case DatabaseWorker::STATUS_DB_ERROR: SendErrorMessage('Ошибка при выполнении запроса IsHwidBanned: '.$dbWorker->GetLastDatabaseError()); break;
-            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.'); break; // Если прислан мусор вместо hwid, посылаем
+            case DatabaseWorker::STATUS_NO_HWID: SendErrorMessage('Нет сведений об оборудовании. Попробуйте запустить лаунчер с правами администратора либо установите другую версию Windows.'); break; // Если прислан мусор вместо hwid, посылаем
             case DatabaseWorker::STATUS_USER_BANNED: SendErrorMessage('Пользователь забанен!'); break;
         }
         $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
     }
-    else SendErrorMessage('Нет сведений об оборудовании. Возможно у вас старый лаунчер, скачайте новый.'); //если прислан мусор вместо hwid, посылаем
+    else SendErrorMessage('Нет сведений об оборудовании. Попробуйте запустить лаунчер с правами администратора либо установите другую версию Windows.'); //если прислан мусор вместо hwid, посылаем
     
     $regStatus = $dbWorker->InsertPlayerInBase($playersTableName, $login, $password);
     $dbWorker->CloseDatabase();

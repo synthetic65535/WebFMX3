@@ -16,7 +16,7 @@
                     "timestamp"   : "текущее время",
                     "profileId"   : "UUID",
                     "profileName" : "Ник игрока",
-					
+                    
                     "textures" : "base64_encode({
                         "SKIN" : {
                             "url" : "http://site.ru/folder/skin.png"
@@ -25,7 +25,7 @@
                             "url" : "http://site.ru/folder/cloak.png"
                         }
                     })"
-                )	
+                )    
             }
         ]
     }

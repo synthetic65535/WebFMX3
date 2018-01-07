@@ -7,10 +7,10 @@
     function GetFilesList($folder, &$fileList, $scanSubfolders = true, $calculateHash = true, $queryType = QUERY_FILES) {
         $dir = opendir($folder); // Открываем дескриптор папки
         
-    	// Читаем содержимое папки:
+        // Читаем содержимое папки:
         while (false !== ($file = readdir($dir))) {
             if ($folder != '.') {
-    		$filename = $folder.'/'.$file;
+            $filename = $folder.'/'.$file;
             } else {
                 $filename = $file;
             }
@@ -52,7 +52,7 @@
                 }
             }
         }
-		
+        
         closedir($dir); // Закрываем дескриптор папки
     }
     

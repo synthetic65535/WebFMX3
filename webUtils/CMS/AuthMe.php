@@ -19,7 +19,7 @@
             
             $exp = preg_split('/\\$/', $hash);
             $salt = $exp[2];
-			
+            
             $hashedPass = '$SHA$'.$salt.'$'.hash('sha256', hash('sha256', $password).$salt);
             
             $request = "SELECT COUNT(1) FROM `{$playersTableName}` WHERE `login`=:login AND BINARY `password`=:password";

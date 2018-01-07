@@ -1,101 +1,588 @@
 {
-	"java_info" : {
-	"java_version" : 8,
+"java_info" : {
+"java_version" : 8,
 
-	"java32_folder" : "Java/x32",
-	"java64_folder" : "Java/x64",
+"java32_folder" : "Java/jre-x32",
+"java64_folder" : "Java/jre-x64",
 
-	"jvm32_library_path" : "bin/client/jvm.dll",
-	"jvm64_library_path" : "bin/server/jvm.dll",
+"jvm32_library_path" : "bin/client/jvm.dll",
+"jvm64_library_path" : "bin/server/jvm.dll",
 
-	"jvm32_arguments" : "-Xmn128m -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
+"jvm32_arguments" : "",
+"jvm64_arguments" : "",
 
-	"jvm64_arguments" : "-Xmn128m -XX:HeapDumpPath=ThisTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -XX:+UseConcMarkSweepGC -XX:-UseAdaptiveSizePolicy -XX:-UseGCOverheadLimit -XX:+CMSParallelRemarkEnabled -XX:+ParallelRefProcEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseCMSInitiatingOccupancyOnly",
+"checked_folders" : [
+{
+"path" : "lib",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "bin",
+"mask" : "*",
+"recursive" : "true"
+}
+]
+},
 
-	"checked_folders" : [
-		{
-			"path" : "lib",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "bin",
-			"mask" : "*",
-			"recursive" : "true"
-		}
-	]
-	},
+"servers" : [
+{
+"name" : "Industrial",
+"info" : "IC2 Experimental, Gravitation Suite",
+"ip" : "185.74.4.117",
+"port" : "25565",
+"legacy_launch" : "true",
+"preview" : "PREVIEW_INDUSTRIAL",
 
-	"servers" : [
-	{
-		"name" : "Industrial Server",
-		"info" : "1.7.10 + Forge + OptiFine",
-		"ip" : "123.45.67.89",
-		"port" : "25565",
-		"legacy_launch" : "true",
-		"!preview" : "Previews/Industrial.png",
-		"preview" : "PREVIEW_INDUSTRIAL",
-		"client_folder" : "Clients/Industrial",
-		"natives_path"  : "versions/$client_version/natives",
-		"assets_path" : "assets",
-		"asset_index" : "1.7.10",
-		"version" : "ForgeOptiFine 1.7.10",
-		"main_class" : "net.minecraft.launchwrapper.Launch",
-		
-		"arguments"  : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 123.45.67.89 --port 25565 --tweakClass optifine.OptiFineTweaker",
-		
-		"jars" : [
-			{"name" : "libraries/*.jar"},
-			{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
-		],
-			
-		"checked_folders" : [
-		{
-			"path" : "",
-			"mask" : "servers.dat",
-			"recursive" : "false"
-		},
-		{
-			"path" : "assets/objects",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "assets/indexes",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "libraries",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "versions",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "mods",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "config/IC2",
-			"mask" : "*",
-			"recursive" : "true"
-		},
-		{
-			"path" : "resourcepacks",
-			"mask" : "OriginalFontFix.zip",
-			"recursive" : "false"
-		},
-		{
-			"path" : "resourcepacks",
-			"mask" : "*.png",
-			"recursive" : "true"
-		}
-		]
-	}
-	]
+"client_folder" : "Clients/Industrial",
+"natives_path" : "versions/$client_version/natives",
+"assets_path" : "assets",
+
+"asset_index" : "1.7.10",
+"version" : "ForgeOptiFine 1.7.10",
+
+"main_class" : "net.minecraft.launchwrapper.Launch",
+"arguments" : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 185.74.4.117 --port 25565 --tweakClass tlauncher.forge.config.FixSplashScreen --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+
+"jars" : [
+{"name" : "libraries/*.jar"},
+{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+],
+
+"addons" : [
+{
+"id" : "shaders",
+"name" : "Shaders Mod",
+"enabled" : "false",
+"files" : [
+{"name" : "mods/ShadersMod.jar"}
+]
+},
+{
+"id" : "reisminimap",
+"name" : "Rei's Minimap Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/ReisMinimap.jar"}
+]
+},
+{
+"id" : "damageindicators",
+"name" : "Damage Indicators Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/DamageIndicators.jar"}
+]
+},
+{
+"id" : "mobends",
+"name" : "Mo'Bends Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/MoBends.jar"}
+]
+},
+{
+"id" : "ic2hud",
+"name" : "IC2 Backpack HUD Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/IC2BackpackHUD.jar"}
+]
+}
+],
+
+"checked_folders" : [
+{
+"path" : "",
+"mask" : "servers.dat",
+"recursive" : "false"
+},
+{
+"path" : "assets/objects",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "assets/indexes",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "libraries",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "versions",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "mods",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "config/ic2",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "resourcepacks",
+"mask" : "OriginalFontFix.zip",
+"recursive" : "false"
+},
+{
+"path" : "resourcepacks",
+"mask" : "*.png",
+"recursive" : "true"
+}
+]
+},
+{
+"name" : "Magic RPG",
+"info" : "Thaumcraft, Twilight Forest",
+"ip" : "185.74.4.117",
+"port" : "25567",
+"legacy_launch" : "true",
+"preview" : "PREVIEW_MAGIC",
+
+"client_folder" : "Clients/Magic",
+"natives_path" : "versions/$client_version/natives",
+"assets_path" : "assets",
+
+"asset_index" : "1.7.10",
+"version" : "ForgeOptiFine 1.7.10",
+
+"main_class" : "net.minecraft.launchwrapper.Launch",
+"arguments" : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 185.74.4.117 --port 25567 --tweakClass tlauncher.forge.config.FixSplashScreen --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+
+"jars" : [
+{"name" : "libraries/*.jar"},
+{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+],
+
+"addons" : [
+{
+"id" : "shaders",
+"name" : "Shaders Mod",
+"enabled" : "false",
+"files" : [
+{"name" : "mods/ShadersMod.jar"}
+]
+},
+{
+"id" : "reisminimap",
+"name" : "Rei's Minimap Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/ReisMinimap.jar"}
+]
+},
+{
+"id" : "damageindicators",
+"name" : "Damage Indicators Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/DamageIndicators.jar"}
+]
+},
+{
+"id" : "mobends",
+"name" : "Mo'Bends Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/MoBends.jar"}
+]
+}
+],
+
+"checked_folders" : [
+{
+"path" : "",
+"mask" : "servers.dat",
+"recursive" : "false"
+},
+{
+"path" : "assets/objects",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "assets/indexes",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "libraries",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "versions",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "mods",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "resourcepacks",
+"mask" : "OriginalFontFix.zip",
+"recursive" : "false"
+},
+{
+"path" : "resourcepacks",
+"mask" : "*.png",
+"recursive" : "true"
+}
+]
+},
+{
+"name" : "SkyBlock",
+"info" : "Industrial Craft 2 Experimental, GS, NC",
+"ip" : "185.74.4.117",
+"port" : "25568",
+"legacy_launch" : "true",
+"preview" : "PREVIEW_SKYBLOCK",
+
+"client_folder" : "Clients/Industrial",
+"natives_path" : "versions/$client_version/natives",
+"assets_path" : "assets",
+
+"asset_index" : "1.7.10",
+"version" : "ForgeOptiFine 1.7.10",
+
+"main_class" : "net.minecraft.launchwrapper.Launch",
+"arguments" : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 185.74.4.117 --port 25568 --tweakClass tlauncher.forge.config.FixSplashScreen --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+
+"jars" : [
+{"name" : "libraries/*.jar"},
+{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+],
+
+"addons" : [
+{
+"id" : "shaders",
+"name" : "Shaders Mod",
+"enabled" : "false",
+"files" : [
+{"name" : "mods/ShadersMod.jar"}
+]
+},
+{
+"id" : "reisminimap",
+"name" : "Rei's Minimap Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/ReisMinimap.jar"}
+]
+},
+{
+"id" : "damageindicators",
+"name" : "Damage Indicators Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/DamageIndicators.jar"}
+]
+},
+{
+"id" : "mobends",
+"name" : "Mo'Bends Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/MoBends.jar"}
+]
+},
+{
+"id" : "ic2hud",
+"name" : "IC2 Backpack HUD Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/IC2BackpackHUD.jar"}
+]
+}
+],
+
+"checked_folders" : [
+{
+"path" : "",
+"mask" : "servers.dat",
+"recursive" : "false"
+},
+{
+"path" : "assets/objects",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "assets/indexes",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "libraries",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "versions",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "mods",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "config/ic2",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "resourcepacks",
+"mask" : "OriginalFontFix.zip",
+"recursive" : "false"
+},
+{
+"path" : "resourcepacks",
+"mask" : "*.png",
+"recursive" : "true"
+}
+]
+},
+{
+"name" : "Mini Games 1",
+"info" : "Spleef, Hunger Games, Cube Control",
+"ip" : "185.74.4.117",
+"port" : "25566",
+"legacy_launch" : "true",
+"preview" : "PREVIEW_MINIGAMES",
+
+"client_folder" : "Clients/Industrial",
+"natives_path" : "versions/$client_version/natives",
+"assets_path" : "assets",
+
+"asset_index" : "1.7.10",
+"version" : "ForgeOptiFine 1.7.10",
+
+"main_class" : "net.minecraft.launchwrapper.Launch",
+"arguments" : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 185.74.4.117 --port 25566 --tweakClass tlauncher.forge.config.FixSplashScreen --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+
+"jars" : [
+{"name" : "libraries/*.jar"},
+{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+],
+
+"addons" : [
+{
+"id" : "shaders",
+"name" : "Shaders Mod",
+"enabled" : "false",
+"files" : [
+{"name" : "mods/ShadersMod.jar"}
+]
+},
+{
+"id" : "reisminimap",
+"name" : "Rei's Minimap Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/ReisMinimap.jar"}
+]
+},
+{
+"id" : "damageindicators",
+"name" : "Damage Indicators Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/DamageIndicators.jar"}
+]
+},
+{
+"id" : "mobends",
+"name" : "Mo'Bends Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/MoBends.jar"}
+]
+},
+{
+"id" : "ic2hud",
+"name" : "IC2 Backpack HUD Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/IC2BackpackHUD.jar"}
+]
+}
+],
+
+"checked_folders" : [
+{
+"path" : "",
+"mask" : "servers.dat",
+"recursive" : "false"
+},
+{
+"path" : "assets/objects",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "assets/indexes",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "libraries",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "versions",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "mods",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "config/ic2",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "resourcepacks",
+"mask" : "OriginalFontFix.zip",
+"recursive" : "false"
+},
+{
+"path" : "resourcepacks",
+"mask" : "*.png",
+"recursive" : "true"
+}
+]
+},
+{
+"name" : "Mini Games 2",
+"info" : "Spleef, Hunger Games, Cube Control",
+"ip" : "185.74.4.117",
+"port" : "25570",
+"legacy_launch" : "true",
+"preview" : "PREVIEW_MINIGAMES",
+
+"client_folder" : "Clients/Industrial",
+"natives_path" : "versions/$client_version/natives",
+"assets_path" : "assets",
+
+"asset_index" : "1.7.10",
+"version" : "ForgeOptiFine 1.7.10",
+
+"main_class" : "net.minecraft.launchwrapper.Launch",
+"arguments" : "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${assets_root} --assetIndex ${assets_index_name} --uuid ${auth_uuid} --accessToken ${auth_access_token} --userProperties ${user_properties} --userType ${user_type} --server 185.74.4.117 --port 25570 --tweakClass tlauncher.forge.config.FixSplashScreen --tweakClass cpw.mods.fml.common.launcher.FMLTweaker",
+
+"jars" : [
+{"name" : "libraries/*.jar"},
+{"name" : "versions/ForgeOptiFine 1.7.10/ForgeOptiFine 1.7.10.jar"}
+],
+
+"addons" : [
+{
+"id" : "shaders",
+"name" : "Shaders Mod",
+"enabled" : "false",
+"files" : [
+{"name" : "mods/ShadersMod.jar"}
+]
+},
+{
+"id" : "reisminimap",
+"name" : "Rei's Minimap Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/ReisMinimap.jar"}
+]
+},
+{
+"id" : "damageindicators",
+"name" : "Damage Indicators Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/DamageIndicators.jar"}
+]
+},
+{
+"id" : "mobends",
+"name" : "Mo'Bends Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/MoBends.jar"}
+]
+},
+{
+"id" : "ic2hud",
+"name" : "IC2 Backpack HUD Mod",
+"enabled" : "true",
+"files" : [
+{"name" : "mods/IC2BackpackHUD.jar"}
+]
+}
+],
+
+"checked_folders" : [
+{
+"path" : "",
+"mask" : "servers.dat",
+"recursive" : "false"
+},
+{
+"path" : "assets/objects",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "assets/indexes",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "libraries",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "versions",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "mods",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "config/ic2",
+"mask" : "*",
+"recursive" : "true"
+},
+{
+"path" : "resourcepacks",
+"mask" : "OriginalFontFix.zip",
+"recursive" : "false"
+},
+{
+"path" : "resourcepacks",
+"mask" : "*.png",
+"recursive" : "true"
+}
+]
+}
+
+]
 }

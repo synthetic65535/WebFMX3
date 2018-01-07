@@ -10,7 +10,7 @@
     if ($password !== $jsonGenPassword)
     {
         header('Content-type: text/html; charset=utf-8');
-        echo '<html><body><form action="#" method=post>Password: <input type="text" name="password"> <input type="submit" value="Generate JSON"></form></body></html>';
+        echo '<html><body><form action="#" method=post>Password: <input type="password" name="password"> <input type="submit" value="Generate JSON"></form></body></html>';
     } else {
         $generatedFilesList = array();
         GenerateFullFileList($clientsFolder, $generatedFilesList);

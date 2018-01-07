@@ -20,7 +20,7 @@
     $registrationFromLauncher = false;
     
     // Настройка файловой иерархии:
-    $workingFolder  = 'http://myserver.com/fmx/';
+    $workingFolder  = 'http://myserver.com/fmx';
     $skinsFolder    = 'Skins';
     $cloaksFolder   = 'Cloaks';
     $clientsFolder  = 'Clients';

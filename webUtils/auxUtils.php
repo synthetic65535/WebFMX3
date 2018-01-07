@@ -2,15 +2,15 @@
     
     function EncryptDecryptVerrnam(&$data, $dataLength, $key, $keyLength) {
         if (($dataLength == 0) || ($keyLength == 0)) {return false;}
-		
+        
         $keyOffset = 0;
         for ($dataOffset = 0; $dataOffset < $dataLength; $dataOffset++) {
             $data[$dataOffset] = $data[$dataOffset] ^ $key[$keyOffset];
             $keyOffset++;
-			
+            
             if ($keyOffset == $keyLength) {$keyOffset = 0;}
         }
-		
+        
         return true;
     }
     
