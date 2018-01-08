@@ -99,19 +99,20 @@
         
         
         // Варианты CMS:
-        const CMS_CUSTOM    = 'Custom.php';
-        const CMS_DLE       = 'DLE.php'; // Старые версии DLE
-        const CMS_DLE_112   = 'DLE_112.php'; // DLE 11.2
-        const CMS_DLE_113   = 'DLE_113.php'; // DLE 11.3
-        const CMS_WEBMCR    = 'WebMCR.php';
-        const CMS_WORDPRESS = 'WordPress.php';
-        const CMS_PUNBB     = 'PunBB.php';
-        const CMS_AUTHME    = 'AuthMe.php';
-        const CMS_VBULLETIN = 'vBulletin.php';
-        const CMS_IPB3      = 'IPBoard3.php';
-        const CMS_IPB4      = 'IPBoard4.php';
-        const CMS_XENFORO   = 'XenForo.php';
-        const CMS_MCRSHOP   = 'CMSMinecraftShop.php';
+        const CMS_CUSTOM        = 'Custom.php';
+        const CMS_DLE           = 'DLE.php'; // Старые версии DLE
+        const CMS_DLE_112       = 'DLE_112.php'; // DLE 11.2
+        const CMS_DLE_113       = 'DLE_113.php'; // DLE 11.3
+		const CMS_DLE_UNIVERSAL = 'DLE_Universal.php'; // DLE 11.3
+        const CMS_WEBMCR        = 'WebMCR.php';
+        const CMS_WORDPRESS     = 'WordPress.php';
+        const CMS_PUNBB         = 'PunBB.php';
+        const CMS_AUTHME        = 'AuthMe.php';
+        const CMS_VBULLETIN     = 'vBulletin.php';
+        const CMS_IPB3          = 'IPBoard3.php';
+        const CMS_IPB4          = 'IPBoard4.php';
+        const CMS_XENFORO       = 'XenForo.php';
+        const CMS_MCRSHOP       = 'CMSMinecraftShop.php';
         
         const CMS_TYPE = DatabaseWorker::CMS_PUNBB; // <-- Здесь менять используемую CMS!
         
