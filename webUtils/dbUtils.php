@@ -103,7 +103,7 @@
         const CMS_DLE           = 'DLE.php'; // Старые версии DLE
         const CMS_DLE_112       = 'DLE_112.php'; // DLE 11.2
         const CMS_DLE_113       = 'DLE_113.php'; // DLE 11.3
-		const CMS_DLE_UNIVERSAL = 'DLE_Universal.php'; // DLE 11.3
+        const CMS_DLE_UNIVERSAL = 'DLE_Universal.php'; // DLE 11.3
         const CMS_WEBMCR        = 'WebMCR.php';
         const CMS_WORDPRESS     = 'WordPress.php';
         const CMS_PUNBB         = 'PunBB.php';
