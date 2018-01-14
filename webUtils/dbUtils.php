@@ -26,7 +26,7 @@
                 $this->_dbHandle = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
                 return isset($this->_dbHandle);
             } catch (PDOException $pdoException) {
-                $this->_lastPDOError = $pdoException.getMessage();
+                $this->_lastPDOError = $pdoException->getMessage();
                 return false;
             }
         }
