@@ -24,12 +24,12 @@
     $encodedHwid            = filter_input(INPUT_POST, 'hwid'    , FILTER_SANITIZE_STRING);
     
     // Расшифровываем логин и пароль:
-    $login    = base64_decode(RepairBase64($encodedLogin));
-    $password = base64_decode(RepairBase64($encodedPassword));
-    $hwid = base64_decode(RepairBase64($encodedHwid));
-    EncryptDecryptVerrnam($login   , strlen($login)   , $encryptionKey, strlen($encryptionKey));
-    EncryptDecryptVerrnam($password, strlen($password), $encryptionKey, strlen($encryptionKey));
-    EncryptDecryptVerrnam($hwid, strlen($hwid), $encryptionKey, strlen($encryptionKey));
+    $login    = HexDecode($encodedLogin);
+    $password = HexDecode($encodedPassword);
+    $hwid     = HexDecode($encodedHwid);
+    DecryptRijndael($login, $encryptionKey);
+    DecryptRijndael($password, $encryptionKey);
+    DecryptRijndael($hwid, $encryptionKey);
     
     // На всякий случай пароль проверяем по тем же правилам, что и логин
     if ((strlen($password) == 0) || (strlen($login) == 0) || LoginHasRestrictedSymbols($login.$password)) {

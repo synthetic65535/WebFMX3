@@ -1,25 +1,93 @@
 <?php
     
-    function EncryptDecryptVerrnam(&$data, $dataLength, $key, $keyLength) {
-        if (($dataLength == 0) || ($keyLength == 0)) {return false;}
-        
-        $keyOffset = 0;
-        for ($dataOffset = 0; $dataOffset < $dataLength; $dataOffset++) {
-            $data[$dataOffset] = $data[$dataOffset] ^ $key[$keyOffset];
-            $keyOffset++;
-            
-            if ($keyOffset == $keyLength) {$keyOffset = 0;}
+    function HexDecode($data) {
+        if ($data == '') {return '';}
+        $dataLength = strlen($data);
+        $result = '';
+        for ($i=0; $i < $dataLength - 1; $i+=2){
+            $result .= chr(hexdec($data[$i].$data[$i+1]));
         }
-        
+        return $result;
+    }
+    
+    function IntToBinary($i) {
+        return chr($i >> 24).chr($i >> 16).chr($i >> 8).chr($i);
+    }
+    
+    function BinaryToInt($b) {
+        return (ord($b[0]) << 24) + (ord($b[1]) << 16) + (ord($b[2]) << 8) + ord($b[3]);
+    }
+    
+    // Структура зашифрованной информации:
+    //   (salt)(iv)[(length)(data)(filler)(md5)]
+    //   salt, 16 байт - соль для генерации ключа шифрования по алгоритму PBKDF2.
+    //   iv, 16 байт - начальный вектор для алгоритма шифрования Rijndael.
+    //   length, 4 байта - размер полезных данных.
+    //   filler, от 0 байт - случайные байты, которые дополняют байты length+data до длины, кратной 16.
+    //   md5, 16 байт - хеш от data.
+    //   Всё, что в квадратных скобках - зашифровано.
+    
+    function EncryptRijndael(&$data, $password, $expanded_data_length = 204) {
+        $salt = openssl_random_pseudo_bytes(16);
+        $iv = openssl_random_pseudo_bytes(16);
+        $data_length = strlen($data);
+        $checksum = md5($data, true);
+        $prepared_data = IntToBinary($data_length).$data;
+        if ($expanded_data_length > $data_length)
+            $prepared_data .= openssl_random_pseudo_bytes($expanded_data_length - $data_length);
+        $prepared_data_length = strlen($prepared_data);
+        while (($prepared_data_length % 16) != 0) {
+            $prepared_data = $prepared_data.chr(rand(0x00, 0xff));
+            $prepared_data_length++;
+        }
+        $key = openssl_pbkdf2($password, $salt, 32, 1000, 'sha1');
+        $td = mcrypt_module_open('rijndael-128', '', 'cbc', '');
+        if (mcrypt_generic_init($td, $key, $iv) === 0) 
+        {
+            $encrypted_data = mcrypt_generic($td, $prepared_data.$checksum);
+            mcrypt_generic_deinit($td);
+            mcrypt_module_close($td);
+        } else {
+            return false; // Error: Initializatioin failed
+        }
+        $data = $salt.$iv.$encrypted_data;
+        return true;
+    }
+    
+    function DecryptRijndael(&$data, $password) {
+        if (strlen($data) < 64) {
+            return false; // Error: Not enough data to decrypt
+        }
+        $salt = substr($data, 0, 16);
+        $iv = substr($data, 16, 16);
+        $extended_data_length = strlen($data) - 32;
+        $encrypted_data = substr($data, 32, $extended_data_length);
+        $key = openssl_pbkdf2($password, $salt, 32, 1000, 'sha1');
+        $td = mcrypt_module_open('rijndael-128', '', 'cbc', '');
+        if (mcrypt_generic_init($td, $key, $iv) === 0) 
+        {
+            $decrypted_data = mdecrypt_generic($td, $encrypted_data);
+            mcrypt_generic_deinit($td);
+            mcrypt_module_close($td);
+        } else {
+            return false; // Error: Initializatioin failed
+        }
+        $data_length_binary = substr($decrypted_data, 0, 4);
+        $data_length = BinaryToInt($data_length_binary);
+        if ($data_length > $extended_data_length - 20) {
+            return false; // Error: DataLength is too big
+        }
+        $result = substr($decrypted_data, 4, $data_length);
+        $checksum = substr($decrypted_data, strlen($decrypted_data) - 16, 16);
+        if ($checksum != md5($result, true)) {
+            return false; // Error: Data is not valid
+        }
+        $data = $result;
         return true;
     }
     
     function LoginHasRestrictedSymbols($string) {
         return !preg_match('/^[0-9a-zA-Z_-]+$/', $string);
-    }
-    
-    function RepairBase64($base64) {
-        return str_replace('_', '/', str_replace('-', '+', $base64));
     }
     
     // Генерация UUID по версии Spigot:

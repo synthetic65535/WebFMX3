@@ -59,6 +59,12 @@
         SendErrorMessage('Valid case login extraction fault!', 'Unable to extract valid-cased username!');
     }
     
+    // Проверяем был ли пользователь забанен уже после запуска клиента
+    $authStatus = $dbWorker->IsPlayerInBase($playersTableName, $username, '');
+    if ($authStatus == DatabaseWorker::STATUS_USER_BANNED) {
+        SendErrorMessage('Bad login', 'User banned!');
+    }
+    
     $hasJoinedStatus = $dbWorker->DoHasJoined($tokensTableName, $username, $serverId, $uuid);
     $dbWorker->CloseDatabase();
     

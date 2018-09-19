@@ -138,10 +138,11 @@
         public function IsPlayerInBase($playersTableName, $login, $password) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
             $authStatus = false;
+            // 1. Сначала нужно проверить забанен ли пользователь
+            // 2. Затем проверяем подходит ли логин-пароль
             include('CMS/'.$this::CMS_TYPE);
             return $authStatus;
         }
-        
         
         public function GetValidCasedLogin($playersTableName, $playersColumnName, &$login) {
             if (!isset($this->_dbConnector)) {return $this::STATUS_DB_OBJECT_NOT_PRESENT;}
@@ -384,7 +385,10 @@
                 (preg_match('/^20[0-9]{10}00000$/', $hwid)) || // 20090516388200000, 20071114173400000
                 ($hwid === '130818V01') || // https://www.google.ru/webhp#q=130818V01
                 ($hwid === '000000000563') || // https://www.google.ru/webhp#q=000000000563
-                ($hwid === '105000000000') ||
+                ($hwid === '000000009451') || // https://www.google.ru/webhp#q=000000009451
+                ($hwid === '105000000000') || // https://www.google.ru/webhp#q=105000000000
+                ($hwid === '2HC015KJ') || // https://www.google.ru/search?q=2HC015KJ
+                ($hwid === '152D20337A0C') || // https://www.google.ru/search?q=152D20337A0C
                 (preg_match('/^0*([0-9]?|123)$/', $hwid)) // 00000000000006, 0000000000000001, 00000000000123
                 ;
         }
@@ -394,9 +398,8 @@
             return
                 ($hwid === '1171') ||
                 ($hwid === '1172') ||
-                ($hwid === '0123456789ABCDE0') ||
+                (preg_match('/^0123456789ABCDE.$/', $hwid)) || // 0123456789ABCDEF, 0123456789ABCDE0, 0123456789ABCDE1
                 ($hwid === '12345678123456781234567812345678') ||
-                ($hwid === '0123456789ABCDE1') ||
                 ($hwid === 'COM6F7FDF7AD81B634A0FB73AD5439A7A41')
                 ;
         }

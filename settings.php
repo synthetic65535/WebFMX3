@@ -39,6 +39,9 @@
     $launcherLink32 = 'http://myserver.com/fmx/Launcher32.exe';
     $launcherLink64 = 'http://myserver.com/fmx/Launcher64.exe';
     
+    // Соль для генерации токенов (просто введите случайный набор символов)
+    $tokenSalt = 'type1here2some3random4string';
+    
     // Ключ шифрования (должен совпадать с ключом в лаунчере):
     $encryptionKey = 'FMXL3';
 ?>
