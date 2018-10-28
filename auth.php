@@ -29,11 +29,11 @@
         SendErrorMessage("Пожалуйста, скачайте новую версию лаунчера на сайте\r\n(кнопка Начать Играть).", $encryptionKey);
     }
     
-    $action = $json->action;
-    $login = $json->login;
-    $password = HexDecode($json->password);
-    $hwid = $json->hwid;
-    $token = $json->token;
+    if (isset($json->action)) $action = $json->action;
+    if (isset($json->login)) $login = $json->login;
+    if (isset($json->password)) $password = HexDecode($json->password);
+    if (isset($json->hwid)) $hwid = $json->hwid;
+    if (isset($json->token)) $token = $json->token;
     
     if (($action != 'preauth') && ($action != 'auth')) {
         SendErrorMessage('Некорректное действие!', $encryptionKey);

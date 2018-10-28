@@ -38,10 +38,10 @@
         SendErrorMessage('Invalid JSON', 'join.php received invalid JSON');
     }
     
-    $accessToken = $json->accessToken;
-    $uuid        = $json->selectedProfile;
-    $serverId    = $json->serverId;
-    $username    = null;
+    if (isset($json->accessToken)) $accessToken = $json->accessToken;
+    if (isset($json->selectedProfile)) $uuid = $json->selectedProfile;
+    if (isset($json->serverId)) $serverId = $json->serverId;
+    $username = null;
     
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();

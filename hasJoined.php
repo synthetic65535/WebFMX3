@@ -40,7 +40,7 @@
     // Получаем данные:
     $username = filter_input(INPUT_GET, 'username', FILTER_SANITIZE_STRING);
     $serverId = filter_input(INPUT_GET, 'serverId', FILTER_SANITIZE_STRING);
-    $uuid     = null;
+    $uuid = null;
     
     // Создаём объект соединения с базой:
     $dbWorker = new DatabaseWorker();
