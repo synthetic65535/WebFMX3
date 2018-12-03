@@ -147,7 +147,7 @@
             
             // Не добавлять HWID этих пользователей в БД
             //if ($login != 'synthetic')
-            //    $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
+            $dbWorker->AddHwidStrInBase($hwidsTableName, $login, $hwid, 0);
         } else SendErrorMessage('Нет сведений об оборудовании!', $encryptionKey); // Если прислан мусор вместо hwid
         
         // Генерируем авторизационные данные:
